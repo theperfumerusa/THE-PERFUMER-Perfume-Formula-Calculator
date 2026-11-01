@@ -335,10 +335,20 @@
 
             <!-- Pyramid Ratio & Balance -->
             <div class="silk-card rounded-2xl p-5">
-                <h3 id="ui-title-pyramid" class="font-cinzel font-bold text-md text-gold-200 mb-4 flex items-center">
-                    <i class="fa-solid fa-layer-group text-gold-400 mr-2"></i> Баланс Ольфакторной Пирамиды
-                </h3>
-                
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                    <h3 id="ui-title-pyramid" class="font-cinzel font-bold text-md text-gold-200 flex items-center">
+                        <i class="fa-solid fa-layer-group text-gold-400 mr-2"></i> Баланс Ольфакторной Пирамиды
+                    </h3>
+                    <select id="pyramid-standard" onchange="calculateAll()" class="bg-white/85 border border-gold-500/40 rounded px-2.5 py-1.5 text-[10px] text-gold-100 focus:outline-none focus:border-gold-400" aria-label="Pyramid proportion standard">
+                        <option value="classic">Классический: 20 / 35 / 45</option>
+                        <option value="fresh">Свежий: 30 / 35 / 35</option>
+                        <option value="floral">Цветочный: 20 / 45 / 35</option>
+                        <option value="woody">Древесный / Амбровый: 15 / 30 / 55</option>
+                        <option value="chypre">Шипровый: 20 / 30 / 50</option>
+                        <option value="custom">Свободная оценка</option>
+                    </select>
+                </div>
+
                 <div class="space-y-3.5">
                     <!-- Top Note Bar -->
                     <div>
@@ -488,7 +498,7 @@
                     <h3 id="ui-title-top5" class="font-cinzel font-bold text-md text-gold-200 flex items-center">
                         <i class="fa-solid fa-dna text-gold-400 mr-2"></i> ТОП-5 ДНК Сходства со Мировой Парфюмерией
                     </h3>
-                    <span class="text-[10px] text-gold-300 bg-gold-500/10 px-2 py-0.5 rounded border border-gold-500/30">GC-MS Vector Matcher</span>
+                    <span class="text-[10px] text-gold-300 bg-gold-500/10 px-2 py-0.5 rounded border border-gold-500/30">Reference DNA Matcher</span>
                 </div>
 
                 <p id="ui-desc-top5" class="text-[11px] text-stone-600 mb-3">Сравнение вашего профиля аккордов с легендарными люксовыми, нишевыми и историческими ароматами мира:</p>
@@ -587,13 +597,9 @@
                 portraitEmpty: "Вводите ингредиенты в формулу для построения ольфакторного профиля...",
                 titleAI: "Советы ИИ-Парфюмера",
                 aiTipsTitle: "🤖 Балансировка Молекулярного Скелета:",
-                aiTipsList: [
-                    "<li>Используйте Хедион (Hedione) для придания верхушке воздушности и объемной диффузии.</li>",
-                    "<li>Добавление Iso E Super фиксирует древесные ноты и придает бархатный шлейф.</li>",
-                    "<li>Следите за дозировкой Этил Мальтола и Сафраналя — мощные молекулы могут перекрыть цитрусы.</li>"
-                ],
+                aiTipsList: [],
                 titleTop5: "ТОП-5 ДНК Сходства со Мировой Парфюмерией",
-                descTop5: "Сравнение вашего профиля аккордов с легендарными люксовыми, нишевыми и историческими ароматами мира",
+                descTop5: "Сопоставление известных маркеров и их долей с локальной базой ароматов. Процент — алгоритмическая оценка, а не подтверждённый GC-MS анализ.",
                 top5Empty: "Вводите компоненты в формулу для автоматического поиска похожих ароматов мира...",
                 btnTxt: "Скачать (.TXT)",
                 btnPdf: "Скачать PDF",
@@ -611,7 +617,8 @@
                 massTag: "Масс-маркет / Классика",
                 vintageTag: "Винтаж / Легенда",
                 grossFormulaText: (weight) => `(Брутто смесь растворов: ${weight} г)`,
-                pyramidNorm: (pct, norm) => `${pct}% (Норма ${norm})`,
+                pyramidNorm: (pct, norm) => `${pct}% (Цель ${norm})`,
+                pyramidStandards: { classic: "Классический", fresh: "Свежий", floral: "Цветочный", woody: "Древесный / Амбровый", chypre: "Шипровый", custom: "Свободная оценка" },
                 aromaNote: (pct, target) => `${pct}% от массы (Цель: ${target}%)`,
                 overlimitGross: (gross, bot, unit) => `Превышение! Масса сырья (${gross} ${unit}) превышает объем флакона (${bot} ${unit}).`,
                 overlimitConc: (pct, target) => `Превышение! Текущая масса концентрата (${pct}%) больше целевой (${target}%).`,
@@ -663,13 +670,9 @@
                 portraitEmpty: "Enter ingredients into the formula to generate an olfactory profile...",
                 titleAI: "AI Perfumer Assistant Tips",
                 aiTipsTitle: "🤖 Molecular Skeleton Balancing:",
-                aiTipsList: [
-                    "<li>Use Hedione to impart airy radiance and high diffusion to top notes.</li>",
-                    "<li>Adding Iso E Super fixes woody notes and provides a velvety sillage.</li>",
-                    "<li>Mind Ethyl Maltol and Safranal dosages — potent molecules can drown citrus accords.</li>"
-                ],
+                aiTipsList: [],
                 titleTop5: "TOP-5 DNA Global Fragrance Matches",
-                descTop5: "Comparing your chord profile against iconic luxury, designer, niche, and historic fragrances worldwide",
+                descTop5: "Compares recognized markers and their proportions against a local fragrance reference set. The score is an algorithmic estimate, not verified GC-MS analysis.",
                 top5Empty: "Enter raw materials into your formula to search global fragrance database...",
                 btnTxt: "Export (.TXT)",
                 btnPdf: "Export PDF",
@@ -687,7 +690,8 @@
                 massTag: "Mass Market / Classic",
                 vintageTag: "Vintage / Legend",
                 grossFormulaText: (weight) => `(Gross raw material mix: ${weight} g)`,
-                pyramidNorm: (pct, norm) => `${pct}% (Norm ${norm})`,
+                pyramidNorm: (pct, norm) => `${pct}% (Target ${norm})`,
+                pyramidStandards: { classic: "Classic", fresh: "Fresh", floral: "Floral", woody: "Woody / Amber", chypre: "Chypre", custom: "Open evaluation" },
                 aromaNote: (pct, target) => `${pct}% of mass (Target: ${target}%)`,
                 overlimitGross: (gross, bot, unit) => `Overlimit! Total raw mass (${gross} ${unit}) exceeds bottle volume (${bot} ${unit}).`,
                 overlimitConc: (pct, target) => `Overlimit! Current concentrate (${pct}%) exceeds target concentration (${target}%).`,
@@ -721,6 +725,41 @@
             "cinnamon": { impact: 8.5, maxTargetRatio: 0.02, name: { ru: "Корица / Коричный альдегид", en: "Cinnamon / Cinnamic Aldehyde" }, desc: { ru: "Жгучая горячая пряность", en: "Fiery warm cinnamon spice" } },
             "evernyl": { impact: 7.0, maxTargetRatio: 0.025, name: { ru: "Эвернил / Дубовый мох", en: "Evernyl / Oakmoss" }, desc: { ru: "Сухая мохово-землистая шипровая горькота", en: "Dry mossy-earthy chypre bitterness" } },
             "iso_e_super": { impact: 4.5, maxTargetRatio: 0.40, name: { ru: "Iso E Super", en: "Iso E Super" }, desc: { ru: "Бархатный прозрачный кедрово-амбровый объем", en: "Velvety transparent cedar-amber volume" } }
+        };
+
+        // Curated working ranges: percentage of PURE fragrance concentrate, not finished bottle.
+        // These are formulation starting guides, not IFRA safety limits or universal maximums.
+        const INGREDIENT_GUIDANCE = {
+            hedione:{range:[3,25],impact:4,ru:"Воздух, жасминовая прозрачность и диффузия; избыток разрежает сердце.",en:"Air, jasmine-like transparency and diffusion; excess can thin the heart."},
+            iso_e_super:{range:[5,35],impact:4.5,ru:"Прозрачный кедрово-амбровый объём; избыток сушит и размывает контраст.",en:"Transparent cedar-amber volume; excess dries and blurs contrast."},
+            ambroxan:{range:[1,12],impact:8.5,ru:"Солоноватая амбровая стойкость; избыток даёт сухую минеральную доминанту.",en:"Salty ambergris-like persistence; excess creates a dry mineral dominance."},
+            ethyl_maltol:{range:[0.05,2],impact:9,ru:"Мощная карамельная сладость; может закрыть цитрусы, зелень и цветы.",en:"Potent caramel sweetness; can cover citrus, green and floral notes."},
+            safranal:{range:[0.01,0.5],impact:9.5,ru:"Высокоинтенсивный шафраново-медицинский оттенок; передозировка резко доминирует.",en:"High-impact saffron/medicinal facet; overdose dominates sharply."},
+            vanillin:{range:[0.2,8],impact:7.5,ru:"Ванильная бальзамическая сладость; избыток утяжеляет базу.",en:"Vanillic balsamic sweetness; excess weighs down the base."},
+            cinnamon:{range:[0.01,0.8],impact:8.5,ru:"Горячая пряность; избыток становится жгучим и перекрывает цветы.",en:"Hot spice; excess becomes burning and overwhelms florals."},
+            evernyl:{range:[0.1,3],impact:7,ru:"Сухой мшистый шипровый каркас; избыток даёт резкую горечь.",en:"Dry mossy chypre structure; excess produces sharp bitterness."},
+            oud:{range:[0.05,5],impact:9.8,ru:"Плотная дымно-анималистичная древесина; избыток затемняет и забивает верхушку.",en:"Dense smoky animalic wood; excess darkens and smothers the opening."},
+            bergamot:{range:[2,20],impact:5,ru:"Цитрусовый старт; малая доля уплощает открытие, избыток быстро улетучивается.",en:"Citrus lift; too little flattens the opening, excess flashes off quickly."},
+            limonene:{range:[0.5,15],impact:5,ru:"Яркая цедровая свежесть; избыток делает старт резким и коротким.",en:"Bright peel freshness; excess makes the opening sharp and short-lived."},
+            linalool:{range:[0.2,12],impact:4,ru:"Цветочно-свежий мост; избыток упрощает профиль и усиливает мыльность.",en:"Fresh floral bridge; excess simplifies the profile and can become soapy."},
+            pink_pepper:{range:[0.1,5],impact:6,ru:"Искристая сухая пряность; избыток становится колким.",en:"Sparkling dry spice; excess becomes prickly."},
+            dihydromyrcenol:{range:[0.5,12],impact:7,ru:"Мощная чистая свежесть; избыток может дать стирально-гелевый эффект.",en:"Powerful clean freshness; excess can become laundry-gel-like."},
+            galaxolide:{range:[1,20],impact:5,ru:"Чистый мускусный объём; избыток сглаживает рельеф.",en:"Clean musky body; excess smooths away definition."},
+            cedrol:{range:[0.1,8],impact:5,ru:"Сухая кедровая опора; избыток даёт пыльную древесную тяжесть.",en:"Dry cedar support; excess creates dusty woody heaviness."},
+            santalol:{range:[0.2,10],impact:6,ru:"Кремовая древесная полнота; избыток сгущает базу.",en:"Creamy woody fullness; excess thickens the base."},
+            rose:{range:[0.05,5],impact:7,ru:"Розовый цветочный акцент; избыток может стать косметическим.",en:"Rosy floral accent; excess can become overly cosmetic."},
+            coumarin:{range:[0.1,5],impact:6,ru:"Тонка, сено и мягкая сладость; избыток утяжеляет сердце.",en:"Tonka, hay and soft sweetness; excess weighs down the heart."},
+            patchouli:{range:[0.2,10],impact:6,ru:"Землистая глубина; избыток мутнит композицию и закрывает цитрусы.",en:"Earthy depth; excess muddies the composition and covers citrus clarity."},
+            lavender:{range:[0.2,8],impact:5,ru:"Травяное сердце; избыток усиливает камфорность и мыльность.",en:"Herbal heart; excess amplifies camphoraceous and soapy facets."},
+            citrus:{range:[1,18],impact:5,ru:"Цитрусовая свежесть; избыток создаёт резкий короткий старт.",en:"Citrus freshness; excess creates a sharp, short opening."}
+        };
+        const PYRAMID_STANDARDS = {
+            classic:{top:[20,30],heart:[30,40],base:[40,50],target:[25,35,40]},
+            fresh:{top:[25,35],heart:[30,40],base:[30,40],target:[30,35,35]},
+            floral:{top:[15,25],heart:[40,50],base:[30,40],target:[20,45,35]},
+            woody:{top:[10,20],heart:[25,35],base:[45,60],target:[15,30,55]},
+            chypre:{top:[15,25],heart:[25,35],base:[40,55],target:[20,30,50]},
+            custom:{top:[0,100],heart:[0,100],base:[0,100],target:[25,35,40]}
         };
 
         // Consolidated Global Fragrance Database
@@ -921,6 +960,7 @@
             document.getElementById('ui-btn-pdf').innerText = t.btnPdf;
 
             updateSelectOptions();
+            updatePyramidStandardLanguage();
             updateRowLanguages();
             calculateAll();
         }
@@ -939,6 +979,17 @@
             const unitSelect = document.getElementById('unit-type');
             const currentUnit = unitSelect.value || "g";
             unitSelect.innerHTML = t.unitOptions.map(o => `<option value="${o.v}" ${o.v === currentUnit ? 'selected' : ''}>${o.t}</option>`).join('');
+        }
+
+        function updatePyramidStandardLanguage() {
+            const select = document.getElementById('pyramid-standard');
+            if (!select) return;
+            const value = select.value || 'classic';
+            const labels = currentLang === 'ru'
+                ? {classic:'Классический: 20 / 35 / 45',fresh:'Свежий: 30 / 35 / 35',floral:'Цветочный: 20 / 45 / 35',woody:'Древесный / Амбровый: 15 / 30 / 55',chypre:'Шипровый: 20 / 30 / 50',custom:'Свободная оценка'}
+                : {classic:'Classic: 20 / 35 / 45',fresh:'Fresh: 30 / 35 / 35',floral:'Floral: 20 / 45 / 35',woody:'Woody / Amber: 15 / 30 / 55',chypre:'Chypre: 20 / 30 / 50',custom:'Open evaluation'};
+            Array.from(select.options).forEach(o => { if (labels[o.value]) o.textContent = labels[o.value]; });
+            select.value = value;
         }
 
         function updateRowLanguages() {
@@ -1078,8 +1129,10 @@
 
                 const matched = INGREDIENT_DATABASE.find(i => i.name.toLowerCase() === name.toLowerCase());
                 if (matched && matched.markers) {
-                    matched.markers.forEach(m => {
-                        activeMarkersMap[m] = (activeMarkersMap[m] || 0) + pureWeight;
+                    const uniqueMarkers = [...new Set(matched.markers)];
+                    const markerShare = uniqueMarkers.length ? pureWeight / uniqueMarkers.length : 0;
+                    uniqueMarkers.forEach(m => {
+                        activeMarkersMap[m] = (activeMarkersMap[m] || 0) + markerShare;
                     });
                 } else if (name) {
                     const lower = name.toLowerCase();
@@ -1113,9 +1166,12 @@
             document.getElementById('heart-bar').style.width = Math.min(heartPct, 100) + '%';
             document.getElementById('base-bar').style.width = Math.min(basePct, 100) + '%';
 
-            document.getElementById('top-percentage').innerText = t.pyramidNorm(topPct.toFixed(1), "20-30%");
-            document.getElementById('heart-percentage').innerText = t.pyramidNorm(heartPct.toFixed(1), "30-40%");
-            document.getElementById('base-percentage').innerText = t.pyramidNorm(basePct.toFixed(1), "45-55%");
+            const standardKey = document.getElementById('pyramid-standard')?.value || 'classic';
+            const standard = PYRAMID_STANDARDS[standardKey] || PYRAMID_STANDARDS.classic;
+            const rangeText = r => r[0] === 0 && r[1] === 100 ? (currentLang === 'ru' ? 'без жёсткой нормы' : 'no fixed target') : `${r[0]}–${r[1]}%`;
+            document.getElementById('top-percentage').innerText = t.pyramidNorm(topPct.toFixed(1), rangeText(standard.top));
+            document.getElementById('heart-percentage').innerText = t.pyramidNorm(heartPct.toFixed(1), rangeText(standard.heart));
+            document.getElementById('base-percentage').innerText = t.pyramidNorm(basePct.toFixed(1), rangeText(standard.base));
 
             // Dilution & Analysis
             calculateDilution(totalPureWeight, totalGrossWeight);
@@ -1296,38 +1352,49 @@
                 </div>
             `;
 
-            // AI Perfumery Assistant Advice Generation
-            if (overpoweringNotes.length > 0) {
-                overpoweringNotes.forEach(on => {
-                    const title = currentLang === 'ru' ? `Превышение порога: ${on.name}` : `Threshold Exceeded: ${on.name}`;
-                    const desc = currentLang === 'ru' 
-                        ? `Доля ${on.ratioPct}% слишком высока. Рекомендуется снизить ввод, иначе ингредиент глушит остальные ноты.`
-                        : `Ratio of ${on.ratioPct}% is too high. Consider reducing input to prevent smothering other accords.`;
-                    addAIAdviceItem("warning", title, desc);
-                });
-            }
+            // Ingredient-by-ingredient analysis uses active material after each row's dilution.
+            const ingredientRows = Array.from(rows).map(row => {
+                const name = row.querySelector('.ingredient-name').value.trim();
+                const gross = parseFloat(row.querySelector('.ingredient-weight').value) || 0;
+                const dilution = parseFloat(row.querySelector('.ingredient-conc').value) || 100;
+                const pure = gross * dilution / 100;
+                const matched = INGREDIENT_DATABASE.find(i => i.name.toLowerCase() === name.toLowerCase());
+                const keys = matched?.markers || inferMarkersFromName(name);
+                return {name,pure,dilution,keys,note:row.querySelector('.ingredient-note').value};
+            }).filter(x => x.name && x.pure > 0);
+            const tips = [];
+            ingredientRows.forEach(item => {
+                const share = totalPure > 0 ? item.pure / totalPure * 100 : 0;
+                const meta = item.keys.map(k => INGREDIENT_GUIDANCE[k]).find(Boolean);
+                const title = `${item.name} — ${share.toFixed(2)}%`;
+                const dilutionText = item.dilution < 100 ? (currentLang==='ru' ? ` Введён как ${item.dilution}% раствор; доля рассчитана по чистому веществу.` : ` Added as ${item.dilution}% dilution; share is based on active material.`) : '';
+                if (!meta) {
+                    tips.push({type:'info',title:currentLang==='ru'?`${title}: нет справочного профиля`:`${title}: no reference profile`,desc:currentLang==='ru'?'Ингредиент учтён в формуле, но интенсивность и рабочий диапазон не определены. Уточните точное сырьё, CAS, поставщика и спецификацию.':'Counted in the formula, but intensity and working range are not defined. Confirm exact material, CAS, supplier and specification.'});
+                    return;
+                }
+                const [lo,hi] = meta.range;
+                if (share > hi) tips.push({type:'warning',title:currentLang==='ru'?`Риск передозировки: ${title}`:`Overdose risk: ${title}`,desc:`${currentLang==='ru'?`Справочный ориентир ${lo}–${hi}% концентрата. `:`Reference guide ${lo}–${hi}% of concentrate. `}${meta[currentLang]}${dilutionText}`});
+                else if (share < lo) tips.push({type:'info',title:currentLang==='ru'?`Низкая доля: ${title}`:`Low proportion: ${title}`,desc:`${currentLang==='ru'?`Справочный ориентир ${lo}–${hi}% концентрата. Может звучать слабо; повышайте только после блоттерной оценки. `:`Reference guide ${lo}–${hi}% of concentrate. It may be too subtle; increase only after blotter evaluation. `}${meta[currentLang]}${dilutionText}`});
+                else tips.push({type:'success',title:currentLang==='ru'?`В рабочем ориентире: ${title}`:`Within working guide: ${title}`,desc:`${currentLang==='ru'?`Ориентир ${lo}–${hi}% концентрата. `:`Guide ${lo}–${hi}% of concentrate. `}${meta[currentLang]}${dilutionText}`});
+            });
 
-            if (topPct < 15) {
-                const title = currentLang === 'ru' ? "Дефицит летучих компонентов" : "Low Top-Note Volatility";
-                const desc = currentLang === 'ru' 
-                    ? "Доля верхних нот ниже 15%. ИИ советует добавить Бергамот, Лимон или Розовый перец для искристого старта."
-                    : "Top notes ratio is below 15%. Consider adding Bergamot, Lemon, or Pink Pepper for a sparkling start.";
-                addAIAdviceItem("warning", title, desc);
-            }
-            if (basePct < 35) {
-                const title = currentLang === 'ru' ? "Низкая физическая фиксация" : "Low Fixation Ratio";
-                const desc = currentLang === 'ru'
-                    ? "Доля базы ниже 35%. Для предотвращения быстрого испарения добавьте Iso E Super или Белый Мускус."
-                    : "Base ratio is below 35%. To extend longevity, introduce Iso E Super or White Musks.";
-                addAIAdviceItem("info", title, desc);
-            }
-            if (topPct >= 20 && heartPct >= 30 && basePct >= 40 && overpoweringNotes.length === 0) {
-                const title = currentLang === 'ru' ? "Идеальный молекулярный баланс" : "Optimal Molecular Balance";
-                const desc = currentLang === 'ru'
-                    ? "ИИ подтверждает: формула гармонично сбалансирована по порогам летучести и диффузии."
-                    : "AI Confirms: Formula is harmoniously balanced across volatility and diffusion thresholds.";
-                addAIAdviceItem("success", title, desc);
-            }
+            const present = new Set(ingredientRows.flatMap(x=>x.keys));
+            const profile = PYRAMID_STANDARDS[document.getElementById('pyramid-standard')?.value || 'classic'] || PYRAMID_STANDARDS.classic;
+            if (topPct < profile.top[0]) tips.push({type:'info',title:currentLang==='ru'?'Недостаточно верхнего раскрытия':'Top opening may be underbuilt',desc:currentLang==='ru'?`Сейчас ${topPct.toFixed(1)}%, ориентир выбранного профиля ${profile.top[0]}–${profile.top[1]}%. Проверьте, нужен ли цитрусовый/терпеновый или свежо-пряный мост, исходя из целевого запаха.`:`Currently ${topPct.toFixed(1)}%; selected profile guide ${profile.top[0]}–${profile.top[1]}%. Assess whether a citrus/terpenic or fresh-spicy bridge fits the intended scent.`});
+            if (heartPct < profile.heart[0]) tips.push({type:'info',title:currentLang==='ru'?'Сердце композиции может быть тонким':'Heart may be underbuilt',desc:currentLang==='ru'?`Сейчас ${heartPct.toFixed(1)}%, ориентир ${profile.heart[0]}–${profile.heart[1]}%. Проверьте наличие связующего цветочного/ароматического тела; Hedione — лишь один из возможных инструментов.`:`Currently ${heartPct.toFixed(1)}%; guide ${profile.heart[0]}–${profile.heart[1]}%. Check for a connecting floral/aromatic body; Hedione is only one possible tool.`});
+            if (basePct < profile.base[0]) tips.push({type:'info',title:currentLang==='ru'?'Недостаточная база':'Base may be underbuilt',desc:currentLang==='ru'?`Сейчас ${basePct.toFixed(1)}%, ориентир ${profile.base[0]}–${profile.base[1]}%. Проверьте наличие подходящего древесного, амбрового или мускусного тела — фиксатор сам по себе не заменяет аккорд.`:`Currently ${basePct.toFixed(1)}%; guide ${profile.base[0]}–${profile.base[1]}%. Review woody, amber or musky body; a fixative alone does not replace an accord.`});
+            if (!present.has('hedione') && heartPct > 0) tips.push({type:'info',title:currentLang==='ru'?'Проверьте воздушное связующее':'Review airy heart bridge',desc:currentLang==='ru'?'Hedione не распознан. Если сердце плотное или цветочное, оцените необходимость диффузного связующего компонента.':'Hedione was not recognized. If the heart feels dense or floral, assess whether a diffusive bridge is needed.'});
+            if (tips.length === 0) tips.push({type:'success',title:currentLang==='ru'?'Явных перекосов не обнаружено':'No obvious imbalance detected',desc:currentLang==='ru'?'По встроенным справочным данным явных дефицитов или превышений нет. Это не заменяет органолептическую оценку и проверку IFRA/безопасности.':'Built-in references show no obvious deficits or excesses. This does not replace sensory evaluation or IFRA/safety review.'});
+            tips.forEach(x=>addAIAdviceItem(x.type,x.title,x.desc));
+            const tipsContainer=document.getElementById('ui-ai-tips-list');
+            if(tipsContainer) tipsContainer.innerHTML=tips.slice(-6).map(x=>`<li><strong>${x.title}.</strong> ${x.desc}</li>`).join('');
+
+        }
+
+        function inferMarkersFromName(name) {
+            const n=(name||'').toLowerCase();
+            const tests=[[/hedione|хедион/,'hedione'],[/iso.?e|изо.?е/,'iso_e_super'],[/ambrox|амброкс/,'ambroxan'],[/bergamot|бергамот/,'bergamot'],[/lemon|лимон/,'limonene'],[/patchouli|пачули/,'patchouli'],[/vanill|ванил/,'vanillin'],[/musk|мускус/,'galaxolide'],[/lavender|лаванд/,'lavender'],[/cedar|кедр/,'cedrol'],[/sandal|сандал/,'santalol'],[/rose|роза/,'rose'],[/oud|уд/,'oud'],[/maltol|мальтол/,'ethyl_maltol'],[/safranal|saffron|шафран/,'safranal'],[/coumarin|тонка/,'coumarin'],[/cinnamon|корица/,'cinnamon'],[/evernyl|oakmoss|мох/,'evernyl'],[/dihydromyrcenol/,'dihydromyrcenol'],[/pink pepper|розовый перец/,'pink_pepper']];
+            return tests.filter(([re])=>re.test(n)).map(x=>x[1]);
         }
 
         function addAIAdviceItem(type, title, text) {
@@ -1409,12 +1476,16 @@
                 }
 
                 const coverage = intersectionCount / skeletonKeys.length;
-                let rawSimilarity = (cosineSim * 0.55 + overlapScore * 0.35 + coverage * 0.10) * 100;
-
-                if (coverage < 0.25) rawSimilarity *= 0.45;
-                else if (coverage < 0.5) rawSimilarity *= 0.75;
-
-                const finalPercentage = Math.min(Math.max(Math.round(rawSimilarity), 0), 98);
+                const userKeys = Object.keys(userVector).filter(k => userVector[k] > 0.003);
+                const precision = userKeys.length ? intersectionCount / userKeys.length : 0;
+                let rawSimilarity = (cosineSim * 0.48 + overlapScore * 0.30 + coverage * 0.15 + precision * 0.07) * 100;
+                if (coverage < 0.20) rawSimilarity *= 0.50;
+                else if (coverage < 0.40) rawSimilarity *= 0.72;
+                if (precision < 0.25) rawSimilarity *= 0.82;
+                const finalPercentage = Math.min(Math.max(Math.round(rawSimilarity), 0), 96);
+                const sharedKeys = skeletonKeys.filter(k => userVector[k] > 0.003);
+                const missingKeys = skeletonKeys.filter(k => !(userVector[k] > 0.003));
+                const signatureCoverage = Math.round(coverage * 100);
 
                 const categoryLabelKey = perfume.category || "nicheTag";
                 const categoryLabel = t[categoryLabelKey] || t["nicheTag"];
@@ -1422,7 +1493,10 @@
                 return {
                     ...perfume,
                     categoryLabel,
-                    similarity: finalPercentage
+                    similarity: finalPercentage,
+                    signatureCoverage,
+                    sharedKeys,
+                    missingKeys
                 };
             });
 
@@ -1439,6 +1513,11 @@
 
                 const notesList = item.notes[currentLang] ? item.notes[currentLang].join(', ') : item.notes['en'].join(', ');
                 const familyLabel = currentLang === 'ru' ? 'Группа:' : 'Family:';
+                const shared = item.sharedKeys.map(k=>k.replaceAll('_',' ')).join(', ') || (currentLang==='ru'?'нет':'none');
+                const missing = item.missingKeys.slice(0,5).map(k=>k.replaceAll('_',' ')).join(', ') || (currentLang==='ru'?'ключевые маркеры найдены':'key markers found');
+                const diagnostic = currentLang==='ru'
+                    ? `Совпавшие маркеры: ${shared}. Не хватает сигнатурных маркеров: ${missing}. Покрытие скелета: ${item.signatureCoverage}%.`
+                    : `Shared markers: ${shared}. Missing signature markers: ${missing}. Skeleton coverage: ${item.signatureCoverage}%.`;
 
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-1">
@@ -1458,8 +1537,9 @@
 
                     <div class="flex justify-between items-center text-[10px] text-stone-600">
                         <span>${familyLabel} ${item.family}</span>
-                        <span class="text-gold-300/80">GC-MS keys: ${notesList}</span>
+                        <span class="text-gold-300/80">${currentLang==='ru'?'Маркеры базы:':'Reference markers:'} ${notesList}</span>
                     </div>
+                    <div class="mt-2 pt-2 border-t border-gold-500/15 text-[10px] text-stone-600">${diagnostic}</div>
                 `;
                 container.appendChild(card);
             });
