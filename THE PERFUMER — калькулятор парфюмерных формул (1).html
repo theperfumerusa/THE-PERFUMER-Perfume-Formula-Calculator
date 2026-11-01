@@ -472,6 +472,42 @@
                 </div>
             </div>
 
+            <!-- Gemini AI connection -->
+            <div class="silk-card rounded-2xl p-5" id="gemini-connection-card">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-cinzel font-bold text-md text-gold-200 flex items-center">
+                        <i class="fa-solid fa-plug text-gold-400 mr-2"></i><span data-gemini="title">Подключение ИИ (Gemini API)</span>
+                    </h3>
+                    <span id="gemini-connection-status" class="text-[10px] text-stone-500 border border-gold-500/30 px-2 py-1 rounded">Не подключено</span>
+                </div>
+                <p class="text-[11px] text-stone-600 mb-3" data-gemini="intro">Введите API-ключ Google AI Studio. Калькулятор проверит доступные модели и выберет подходящую.</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div class="sm:col-span-2">
+                        <label class="text-xs text-gold-300 block mb-1" for="gemini-api-key" data-gemini="keylabel">API-ключ Google Gemini</label>
+                        <div class="flex gap-2">
+                            <input id="gemini-api-key" type="password" autocomplete="off" placeholder="AIza..." class="min-w-0 flex-1 bg-white/85 border border-gold-500/40 rounded px-3 py-2 text-xs text-stone-800 focus:outline-none focus:border-gold-400">
+                            <button type="button" id="gemini-toggle-key" class="px-3 rounded border border-gold-500/40 text-gold-300 text-xs" data-gemini="show">Показать</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gold-300 block mb-1" for="gemini-model" data-gemini="modellabel">Модель</label>
+                        <select id="gemini-model" class="w-full bg-white/85 border border-gold-500/40 rounded px-3 py-2 text-xs text-stone-800">
+                            <option value="auto">Автоматически — лучшая доступная</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <label class="flex items-center gap-2 text-[11px] text-stone-600 pb-2"><input type="checkbox" id="gemini-remember-key"> <span data-gemini="remember">Сохранить ключ на этом устройстве</span></label>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <button type="button" id="gemini-connect-btn" class="gold-button py-2 px-4 rounded-lg text-xs"><i class="fa-solid fa-link mr-1"></i><span data-gemini="connect">Проверить подключение</span></button>
+                    <button type="button" id="gemini-analyze-btn" class="gold-button py-2 px-4 rounded-lg text-xs" disabled><i class="fa-solid fa-wand-magic-sparkles mr-1"></i><span data-gemini="analyze">Полный анализ: ДНК + советы</span></button>
+                </div>
+                <p class="text-[10px] text-stone-500 mt-2" data-gemini="disclaimer">Подписка Gemini в приложении не включает API автоматически. Нужен отдельный ключ Google AI Studio. Ключ отправляется напрямую в Google; хранение на устройстве — по желанию.</p>
+                <p class="text-[10px] text-stone-500 mt-2" data-gemini="outputs">Результаты полного анализа будут выведены в разделы «Советы ИИ-Парфюмера» и «ТОП-5 ДНК».</p>
+                <div id="gemini-ai-result" class="hidden mt-3 p-3 rounded-lg bg-white/70 border border-gold-500/25 text-xs text-stone-700 whitespace-pre-wrap leading-relaxed"></div>
+            </div>
+
             <!-- AI Perfumery Assistant Advice & Balance Warnings -->
             <div class="silk-card rounded-2xl p-5">
                 <h3 id="ui-title-ai" class="font-cinzel font-bold text-md text-gold-200 mb-3 flex items-center">
@@ -751,7 +787,15 @@
             coumarin:{range:[0.1,5],impact:6,ru:"Тонка, сено и мягкая сладость; избыток утяжеляет сердце.",en:"Tonka, hay and soft sweetness; excess weighs down the heart."},
             patchouli:{range:[0.2,10],impact:6,ru:"Землистая глубина; избыток мутнит композицию и закрывает цитрусы.",en:"Earthy depth; excess muddies the composition and covers citrus clarity."},
             lavender:{range:[0.2,8],impact:5,ru:"Травяное сердце; избыток усиливает камфорность и мыльность.",en:"Herbal heart; excess amplifies camphoraceous and soapy facets."},
-            citrus:{range:[1,18],impact:5,ru:"Цитрусовая свежесть; избыток создаёт резкий короткий старт.",en:"Citrus freshness; excess creates a sharp, short opening."}
+            citrus:{range:[1,18],impact:5,ru:"Цитрусовая свежесть; избыток создаёт резкий короткий старт.",en:"Citrus freshness; excess creates a sharp, short opening."},
+            mint:{range:[0.01,1],impact:8,ru:"Мята быстро становится узнаваемой и охлаждающей; избыток может сделать профиль зубным/камфорным и подавить тонкие ноты. Ориентир зависит от вида мяты и хемотипа.",en:"Mint becomes recognizably cooling quickly; excess can turn toothpaste-like/camphoraceous and suppress delicate notes. The guide depends on mint type and chemotype."},
+            linalyl_acetate:{range:[0.5,12],impact:4,ru:"Свежий бергамотово-лавандовый, мягкий цветочно-терпеновый мост; избыток может сместить композицию в мыльно-одеколонное направление.",en:"Fresh bergamot-lavender, soft floral-terpenic bridge; excess can push the formula toward a soapy cologne effect."},
+            marine:{range:[0.01,2],impact:8,ru:"Морской/озоновый эффект часто заметен в малой дозе; избыток может звучать металлически, арбузно или резко синтетически. Для Calone конкретный рабочий уровень зависит от разведения и задачи.",en:"Marine/ozonic effect can be noticeable at low dosage; excess may smell metallic, melon-like or sharply synthetic. Calone working levels depend on dilution and the target."},
+            floral:{range:[0.5,15],impact:4,ru:"Обобщённый маркер цветочного материала: точный диапазон невозможен без идентификации вещества. Не повышайте дозировку только по этому профилю.",en:"Generic floral marker: no reliable range without identifying the exact material. Do not increase dosage based on this generic profile alone."},
+            vetiver:{range:[0.2,8],impact:5,ru:"Сухая корневая, дымная или зелёная древесность в зависимости от сорта/фракции; избыток может сделать базу землистой и жёсткой.",en:"Dry rooty, smoky or green woods depending on grade/fraction; excess may make the base earthy and austere."},
+            cardamom:{range:[0.1,4],impact:6,ru:"Искристая прохладная пряность; избыток может сделать старт резким и камфорным.",en:"Sparkling cool spice; excess can make the opening sharp and camphoraceous."},
+            leather:{range:[0.01,3],impact:8,ru:"Кожаные базы сильно различаются по составу; малая доля может быть достаточной, а избыток подавляет цветы и свежие ноты. Нужны точное торговое название и спецификация.",en:"Leather bases vary greatly; a small share may suffice, while excess can suppress florals and fresh notes. Exact trade name/specification is needed."},
+            flint:{range:[0.01,2],impact:7,ru:"Минеральный/каменистый эффект зависит от конкретного материала; без CAS или торгового названия нельзя надёжно установить рабочий диапазон.",en:"Mineral/flinty effect depends on the exact material; a reliable working range cannot be set without CAS or trade name."}
         };
         const PYRAMID_STANDARDS = {
             classic:{top:[20,30],heart:[30,40],base:[40,50],target:[25,35,40]},
@@ -963,6 +1007,7 @@
             updatePyramidStandardLanguage();
             updateRowLanguages();
             calculateAll();
+            if (typeof localizeGeminiPanel === 'function') localizeGeminiPanel();
         }
 
         function initSelectOptions() {
@@ -1177,6 +1222,7 @@
             calculateDilution(totalPureWeight, totalGrossWeight);
             updateAdvancedOlfactoryAnalysis(rows, topPct, heartPct, basePct, totalPureWeight, activeMarkersMap);
             calculateTop5Matches(activeMarkersMap, totalPureWeight);
+            scheduleGeminiAutoAnalysis();
         }
 
         // Calculate Dilution
@@ -1295,18 +1341,28 @@
                 tagsContainer.appendChild(badge);
             });
 
-            // Olfactory Scent Evolution & Dominance Analysis
-            let dominantText = "";
-            if (markerImpacts.length > 0) {
-                const topDominant = markerImpacts.slice(0, 2).map(m => `${m.name} (${(m.ratio * 100).toFixed(1)}%)`).join(', ');
-                dominantText = currentLang === 'ru' 
-                    ? `В ядре ольфакторного профиля доминируют <strong>${topDominant}</strong>, определяя ключевой характер шлейфа.`
-                    : `The core olfactory profile is dominated by <strong>${topDominant}</strong>, defining the key sillage character.`;
-            } else {
-                dominantText = currentLang === 'ru'
-                    ? "Композиция представляет собой сбалансированный нейтральный древесно-цветочный аккорд."
-                    : "The composition presents a balanced neutral woody-floral accord.";
-            }
+            // Formula-linked accord reading. This is a transparent heuristic, not a sensory test.
+            const formulaIngredients = Array.from(rows).map(row => {
+                const name = row.querySelector('.ingredient-name')?.value?.trim() || '';
+                const gross = parseFloat(row.querySelector('.ingredient-weight')?.value) || 0;
+                const dilution = parseFloat(row.querySelector('.ingredient-conc')?.value) || 100;
+                return {name, pure:gross*dilution/100, n:name.toLowerCase()};
+            }).filter(x=>x.name && x.pure>0).sort((a,b)=>b.pure-a.pure);
+            const has = re => formulaIngredients.some(x=>re.test(x.n));
+            const accords = [];
+            if (has(/lemon|bergamot|citrus|grapefruit|orange|mandarin|лимон|бергамот|цитрус|грейпфрут|апельсин|мандарин/)) accords.push(currentLang==='ru'?'цитрусовая цедровая свежесть':'citrus-peel freshness');
+            if (has(/peppermint|pepermint|mint|мята/)) accords.push(currentLang==='ru'?'прохладный мятный оттенок':'cool mint facet');
+            if (has(/calone|marine|aquatic|морск|калон/)) accords.push(currentLang==='ru'?'водно-морской озоновый аккорд':'watery marine-ozonic accord');
+            if (has(/hedione|florol|jasmine|linalool|linalyl acetate|rose|jasmin|floral|жасмин|цветоч|роза/)) accords.push(currentLang==='ru'?'воздушное цветочное сердце':'airy floral heart');
+            if (has(/iso\s*e|iso.?e.?super|cedar|cedrol|patchouli|vetiver|sandal|wood|кедр|пачули|ветивер|сандал|дерев/)) accords.push(currentLang==='ru'?'прозрачная древесная база':'transparent woody base');
+            if (has(/ambrox|ambrofix|amber|амброкс|амбра/)) accords.push(currentLang==='ru'?'сухой амброво-минеральный шлейф':'dry amber-mineral trail');
+            if (has(/galaxolide|musk|habanolide|ethylene brassylate|мускус/)) accords.push(currentLang==='ru'?'чистая мускусная мягкость':'clean musky softness');
+            if (has(/ethyl.?maltol|maltol|vanillin|ванил|мальтол/)) accords.push(currentLang==='ru'?'сладкий карамельно-ванильный штрих':'sweet caramel-vanillic accent');
+            const topIngredients = formulaIngredients.slice(0,3).map(x=>`${escapeHTML(x.name)} (${(x.pure/totalPure*100).toFixed(1)}%)`).join(', ');
+            const accordText = accords.length ? accords.join(currentLang==='ru'?' + ':' + ') : (currentLang==='ru'?'характер не удалось уверенно классифицировать по названиям':'the character cannot be confidently classified from ingredient names');
+            const dominantText = currentLang === 'ru'
+                ? `По составу просматривается профиль: <strong>${escapeHTML(accordText)}</strong>. Наибольшая доля чистого вещества у: <strong>${topIngredients || 'не определено'}</strong>. Это гипотеза по сырью и дозировкам, а не результат обонятельного теста; пороги восприятия и взаимодействия материалов могут изменить впечатление.`
+                : `The formula suggests: <strong>${escapeHTML(accordText)}</strong>. The largest active-material shares are: <strong>${topIngredients || 'not determined'}</strong>. This is a hypothesis from materials and dosage, not a sensory test; odor thresholds and interactions can change the impression.`;
 
             let overpoweredWarningText = "";
             if (overpoweringNotes.length > 0) {
@@ -1321,19 +1377,19 @@
             // Timeline progression
             let evolutionTop, evolutionHeart, evolutionBase;
             if (currentLang === 'ru') {
-                evolutionTop = topPct > 30 ? "интенсивный яркий цитрусово-озоновый старт" : topPct > 15 ? "сдержанное элегантное начало" : "вуалированный старт с быстрым переходом к сердцу";
-                evolutionHeart = heartPct > 35 ? "пышное диффузное сердце" : "умеренное сухое сердце";
-                evolutionBase = basePct > 50 ? "глубокий стойкий финиш до 24 часов." : "легкий прозрачный близкий к коже шлейф.";
+                evolutionTop = topPct > 30 ? "значительная доля ингредиентов отнесена к верхушке" : topPct > 15 ? "умеренная доля ингредиентов отнесена к верхушке" : "небольшая доля ингредиентов отнесена к верхушке";
+                evolutionHeart = heartPct > 35 ? "основная часть формулы отнесена к сердцу" : "умеренная доля формулы отнесена к сердцу";
+                evolutionBase = basePct > 50 ? "более высокая доля формулы отнесена к базе; стойкость нужно проверить на коже." : "умеренная доля формулы отнесена к базе; реальный шлейф зависит от материалов и дозировок.";
             } else {
-                evolutionTop = topPct > 30 ? "an intense vibrant citrus-ozone opening" : topPct > 15 ? "a restrained elegant start" : "a subtle opening transitioning rapidly to the heart";
-                evolutionHeart = heartPct > 35 ? "a lush diffuse floral heart" : "a moderate dry heart";
-                evolutionBase = basePct > 50 ? "a deep long-lasting dry-down up to 24 hours." : "a light skin-scent trace.";
+                evolutionTop = topPct > 30 ? "a large share of the formula is assigned to the top" : topPct > 15 ? "a moderate share of the formula is assigned to the top" : "a small share of the formula is assigned to the top";
+                evolutionHeart = heartPct > 35 ? "the largest share of the formula is assigned to the heart" : "a moderate share of the formula is assigned to the heart";
+                evolutionBase = basePct > 50 ? "a more prominent base; actual longevity must be tested on skin." : "a light skin-scent trace.";
             }
 
             const headingPyramid = currentLang === 'ru' ? 'Ольфакторная пирамида химического раскрытия:' : 'Chemical Olfactory Evolution Timeline:';
-            const topTimeline = currentLang === 'ru' ? (topPct > 25 ? 'Высокая диффузия и резкость' : 'Низкая летучесть') : (topPct > 25 ? 'High volatility & sharpness' : 'Low volatility');
-            const heartTimeline = currentLang === 'ru' ? (markerImpacts.some(m=>m.key==='hedione') ? 'Сияющая аэрация (Хедион)' : 'Плотный аккорд') : (markerImpacts.some(m=>m.key==='hedione') ? 'Radiant aeration (Hedione)' : 'Solid accord');
-            const baseTimeline = currentLang === 'ru' ? (markerImpacts.some(m=>m.key==='ambroxan'||m.key==='iso_e_super') ? 'Молекулярная фиксация (Амброксан / Iso E)' : 'Стандартная стойкость') : (markerImpacts.some(m=>m.key==='ambroxan'||m.key==='iso_e_super') ? 'Molecular fixation (Ambroxan / Iso E)' : 'Standard longevity');
+            const topTimeline = currentLang === 'ru' ? 'Доля в пирамиде; летучесть зависит от конкретного сырья' : 'Pyramid share; volatility depends on the actual materials';
+            const heartTimeline = currentLang === 'ru' ? (formulaIngredients.some(x=>/hedione|хедион/i.test(x.name)) ? 'Хедион может добавить воздушность; эффект зависит от дозировки и соседних материалов' : 'Характер сердца определяется конкретными материалами') : (formulaIngredients.some(x=>/hedione|хедион/i.test(x.name)) ? 'Hedione may add airiness; effect depends on dosage and neighboring materials' : 'Heart character depends on the actual materials');
+            const baseTimeline = currentLang === 'ru' ? (formulaIngredients.some(x=>/ambrox|ambrofix|iso\s*e|iso.?e.?super/i.test(x.name)) ? 'Есть амброво-древесные материалы; стойкость и шлейф нужно проверить на блоттере и коже' : 'Стойкость нельзя вывести только из процента базы') : (formulaIngredients.some(x=>/ambrox|ambrofix|iso\s*e|iso.?e.?super/i.test(x.name)) ? 'Amber-woody materials are present; test longevity and sillage on blotter and skin' : 'Longevity cannot be inferred from base percentage alone');
 
             storyContainer.innerHTML = `
                 <div class="space-y-2">
@@ -1388,13 +1444,32 @@
             tips.forEach(x=>addAIAdviceItem(x.type,x.title,x.desc));
             const tipsContainer=document.getElementById('ui-ai-tips-list');
             if(tipsContainer) tipsContainer.innerHTML=tips.slice(-6).map(x=>`<li><strong>${x.title}.</strong> ${x.desc}</li>`).join('');
+            // Replace the older summary-only tips with a complete per-row analysis.
+            renderLocalIngredientAdvice();
 
         }
 
+        function escapeHTML(value) {
+            return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+        }
+
         function inferMarkersFromName(name) {
-            const n=(name||'').toLowerCase();
-            const tests=[[/hedione|хедион/,'hedione'],[/iso.?e|изо.?е/,'iso_e_super'],[/ambrox|амброкс/,'ambroxan'],[/bergamot|бергамот/,'bergamot'],[/lemon|лимон/,'limonene'],[/patchouli|пачули/,'patchouli'],[/vanill|ванил/,'vanillin'],[/musk|мускус/,'galaxolide'],[/lavender|лаванд/,'lavender'],[/cedar|кедр/,'cedrol'],[/sandal|сандал/,'santalol'],[/rose|роза/,'rose'],[/oud|уд/,'oud'],[/maltol|мальтол/,'ethyl_maltol'],[/safranal|saffron|шафран/,'safranal'],[/coumarin|тонка/,'coumarin'],[/cinnamon|корица/,'cinnamon'],[/evernyl|oakmoss|мох/,'evernyl'],[/dihydromyrcenol/,'dihydromyrcenol'],[/pink pepper|розовый перец/,'pink_pepper']];
-            return tests.filter(([re])=>re.test(n)).map(x=>x[1]);
+            const n = (name || '').toLowerCase().trim();
+            const tests = [
+                [/hedione|хедион/,'hedione'], [/iso\s*e|iso.?e.?super|изо.?е/,'iso_e_super'],
+                [/ambrox|ambrofix|амброкс/,'ambroxan'], [/bergamot|бергамот/,'bergamot'],
+                [/lemon|лимон|citral|limonene/,'limonene'], [/citrus|grapefruit|orange|mandarin|цитрус|грейпфрут|апельсин|мандарин/,'citrus'],
+                [/patchouli|пачули/,'patchouli'], [/vanill|ванил/,'vanillin'], [/musk|мускус|galaxolide|habanolide|ethylene brassylate/,'galaxolide'],
+                [/lavender|лаванд/,'lavender'], [/cedar|cedrol|кедр/,'cedrol'], [/sandal|santal|сандал/,'santalol'],
+                [/rose|роза/,'rose'], [/oud|уд|agarwood/,'oud'], [/ethyl.?maltol|maltol|мальтол/,'ethyl_maltol'],
+                [/safranal|saffron|шафран/,'safranal'], [/coumarin|тонка/,'coumarin'], [/cinnamon|корица/,'cinnamon'],
+                [/evernyl|oakmoss|moss|мох/,'evernyl'], [/dihydromyrcenol/,'dihydromyrcenol'], [/pink.?pepper|розовый перец/,'pink_pepper'],
+                [/peppermint|pepermint|mint|мята/,'mint'], [/linalyl.?acetate/,'linalyl_acetate'], [/linalool/,'linalool'],
+                [/calone|marine|aquatic|морск|калон/,'marine'], [/florol|floral|цветоч/,'floral'], [/cardamom|кардамон/,'cardamom'],
+                [/jasmine|жасмин/,'hedione'], [/vetiver|ветивер/,'vetiver'], [/leather|suederal|кож/,'leather'],
+                [/flint|mineral|минерал/,'flint']
+            ];
+            return [...new Set(tests.filter(([re]) => re.test(n)).map(x => x[1]))];
         }
 
         function addAIAdviceItem(type, title, text) {
@@ -1423,128 +1498,796 @@
             container.appendChild(div);
         }
 
-        // GC-MS DNA Similarity Engine
+        // Gemini API configuration and runtime state.
+        // These declarations must exist before any connection or auto-analysis handler runs.
+        const GEMINI_API_ROOT = 'https://generativelanguage.googleapis.com/v1beta';
+        const GEMINI_MODEL_FALLBACKS = ['gemini-3.8-flash', 'gemini-3.6-flash'];
+        const GEMINI_AUTO_DEBOUNCE_MS = 1800;
+        let geminiAvailableModels = [];
+        let geminiConnected = false;
+        let geminiAnalysisRevision = 0;
+        let geminiAutoTimer = null;
+        let geminiLastAnalyzedFingerprint = '';
+
+        // Local DNA matcher: an immediate, explicitly heuristic estimate from the built-in reference set.
+        // Gemini/web results can replace these estimates after a successful analysis.
         function calculateTop5Matches(userMarkers, totalPureWeight) {
             const container = document.getElementById('top5-matches-container');
-            const t = I18N[currentLang];
-            container.innerHTML = '';
-
-            if (totalPureWeight <= 0 || Object.keys(userMarkers).length === 0) {
-                container.innerHTML = `
-                    <div class="text-xs text-stone-500 italic text-center py-4">
-                        ${t.top5Empty}
-                    </div>
-                `;
+            if (!container) return;
+            if (!(totalPureWeight > 0)) {
+                container.innerHTML = `<p class="text-xs text-stone-500 italic text-center py-4">${currentLang === 'ru' ? 'Добавьте ингредиенты, чтобы рассчитать сходство.' : 'Add ingredients to calculate similarity.'}</p>`;
                 return;
             }
-
-            let userVector = {};
-            Object.keys(userMarkers).forEach(m => {
-                userVector[m] = userMarkers[m] / totalPureWeight;
+            const user = {};
+            Object.entries(userMarkers || {}).forEach(([key, mass]) => {
+                const k = normalizeMarkerKey(key);
+                const value = Number(mass) || 0;
+                if (k && value > 0) user[k] = (user[k] || 0) + value / totalPureWeight;
             });
-
-            let matches = FAMOUS_FRAGRANCES_DATABASE.map(perfume => {
-                const skeletonKeys = Object.keys(perfume.skeleton);
-                let intersectionCount = 0;
-                let overlapScore = 0;
-                let dotProduct = 0;
-                let userVecNormSq = 0;
-                let refVecNormSq = 0;
-
-                skeletonKeys.forEach(key => {
-                    const refVal = perfume.skeleton[key];
-                    refVecNormSq += refVal * refVal;
-
-                    if (userVector[key] && userVector[key] > 0.005) {
-                        const userVal = userVector[key];
-                        intersectionCount++;
-                        dotProduct += userVal * refVal;
-
-                        const delta = Math.abs(userVal - refVal);
-                        const componentOverlap = Math.max(0, 1 - (delta / Math.max(refVal, userVal)));
-                        overlapScore += componentOverlap * refVal;
-                    }
+            const userNorm = Math.sqrt(Object.values(user).reduce((sum, x) => sum + x*x, 0));
+            const matches = FAMOUS_FRAGRANCES_DATABASE.map(ref => {
+                const sk = {};
+                Object.entries(ref.skeleton || {}).forEach(([key, value]) => {
+                    const k = normalizeMarkerKey(key);
+                    if (k) sk[k] = (sk[k] || 0) + (Number(value) || 0);
                 });
+                const refNorm = Math.sqrt(Object.values(sk).reduce((sum, x) => sum + x*x, 0));
+                let dot = 0;
+                Object.keys(user).forEach(k => { dot += user[k] * (sk[k] || 0); });
+                const cosine = userNorm && refNorm ? dot / (userNorm * refNorm) : 0;
+                const overlap = Object.keys(user).filter(k => sk[k] && user[k] > 0.015).length;
+                const score = Math.round(Math.min(84, cosine * 75 + Math.min(overlap, 4) * 2));
+                const shared = Object.keys(user).filter(k => sk[k]).sort((a,b) => user[b]-user[a]).slice(0,4);
+                const missing = Object.keys(sk).filter(k => !user[k] || user[k] < 0.01).slice(0,4);
+                return { brand:ref.brand, title:ref.title, family:ref.family, similarity_score:score,
+                    shared_dna: shared.length ? shared.map(markerLabel).join(', ') : (currentLang==='ru'?'слабое пересечение распознанных маркеров':'limited overlap among recognized markers'),
+                    differences: missing.length ? (currentLang==='ru'?'В референсном скелете не хватает: ':'Reference skeleton facets not detected: ')+missing.map(markerLabel).join(', ') : (currentLang==='ru'?'По упрощённому скелету существенных пропусков не найдено':'No major gaps detected by the simplified skeleton'),
+                    rationale: currentLang==='ru' ? 'Предварительное локальное сравнение векторов известных маркеров и справочного скелета; это не подтверждение сходства по запаху.' : 'Preliminary local comparison of recognized-marker vectors and a reference skeleton; this does not confirm sensory similarity.',
+                    confidence: currentLang==='ru'?'низкая — локальная эвристика':'low — local heuristic', _local:true };
+            }).sort((a,b)=>b.similarity_score-a.similarity_score).filter(x=>x.similarity_score>=18).slice(0,5);
+            renderLocalDNA(matches);
+        }
 
-                Object.keys(userVector).forEach(key => {
-                    userVecNormSq += userVector[key] * userVector[key];
-                });
-
-                let cosineSim = 0;
-                if (userVecNormSq > 0 && refVecNormSq > 0) {
-                    cosineSim = dotProduct / (Math.sqrt(userVecNormSq) * Math.sqrt(refVecNormSq));
-                }
-
-                const coverage = intersectionCount / skeletonKeys.length;
-                const userKeys = Object.keys(userVector).filter(k => userVector[k] > 0.003);
-                const precision = userKeys.length ? intersectionCount / userKeys.length : 0;
-                let rawSimilarity = (cosineSim * 0.48 + overlapScore * 0.30 + coverage * 0.15 + precision * 0.07) * 100;
-                if (coverage < 0.20) rawSimilarity *= 0.50;
-                else if (coverage < 0.40) rawSimilarity *= 0.72;
-                if (precision < 0.25) rawSimilarity *= 0.82;
-                const finalPercentage = Math.min(Math.max(Math.round(rawSimilarity), 0), 96);
-                const sharedKeys = skeletonKeys.filter(k => userVector[k] > 0.003);
-                const missingKeys = skeletonKeys.filter(k => !(userVector[k] > 0.003));
-                const signatureCoverage = Math.round(coverage * 100);
-
-                const categoryLabelKey = perfume.category || "nicheTag";
-                const categoryLabel = t[categoryLabelKey] || t["nicheTag"];
-
-                return {
-                    ...perfume,
-                    categoryLabel,
-                    similarity: finalPercentage,
-                    signatureCoverage,
-                    sharedKeys,
-                    missingKeys
-                };
-            });
-
-            matches.sort((a, b) => b.similarity - a.similarity);
-            const top5 = matches.slice(0, 5);
-
-            top5.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = 'bg-white/60 p-3 rounded-lg border border-gold-500/20 hover:border-gold-400/50 transition';
-
-                let progressColor = 'from-stone-400 to-amber-600';
-                if (item.similarity >= 65) progressColor = 'from-amber-400 to-yellow-500';
-                else if (item.similarity >= 40) progressColor = 'from-gold-600 to-gold-400';
-
-                const notesList = item.notes[currentLang] ? item.notes[currentLang].join(', ') : item.notes['en'].join(', ');
-                const familyLabel = currentLang === 'ru' ? 'Группа:' : 'Family:';
-                const shared = item.sharedKeys.map(k=>k.replaceAll('_',' ')).join(', ') || (currentLang==='ru'?'нет':'none');
-                const missing = item.missingKeys.slice(0,5).map(k=>k.replaceAll('_',' ')).join(', ') || (currentLang==='ru'?'ключевые маркеры найдены':'key markers found');
-                const diagnostic = currentLang==='ru'
-                    ? `Совпавшие маркеры: ${shared}. Не хватает сигнатурных маркеров: ${missing}. Покрытие скелета: ${item.signatureCoverage}%.`
-                    : `Shared markers: ${shared}. Missing signature markers: ${missing}. Skeleton coverage: ${item.signatureCoverage}%.`;
-
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-1">
-                        <div>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-[10px] text-gold-300 uppercase tracking-widest block font-bold">#${index+1} ${item.brand}</span>
-                                <span class="text-[9px] bg-gold-500/15 border border-gold-500/35 text-gold-300 px-1.5 py-0.2 rounded">${item.categoryLabel}</span>
-                            </div>
-                            <h4 class="font-cinzel text-sm text-gold-100 font-bold">${item.title}</h4>
-                        </div>
-                        <span class="font-cinzel font-bold text-sm text-gold-300">${item.similarity}%</span>
-                    </div>
-                    
-                    <div class="w-full bg-[#EBDDC8] rounded-full h-1.5 border border-gold-500/25 mb-2 overflow-hidden">
-                        <div class="bg-gradient-to-r ${progressColor} h-full transition-all duration-700" style="width: ${item.similarity}%"></div>
-                    </div>
-
-                    <div class="flex justify-between items-center text-[10px] text-stone-600">
-                        <span>${familyLabel} ${item.family}</span>
-                        <span class="text-gold-300/80">${currentLang==='ru'?'Маркеры базы:':'Reference markers:'} ${notesList}</span>
-                    </div>
-                    <div class="mt-2 pt-2 border-t border-gold-500/15 text-[10px] text-stone-600">${diagnostic}</div>
-                `;
-                container.appendChild(card);
+        function normalizeMarkerKey(key) {
+            const aliases = { lemon:'limonene', peppermint:'mint', pepermint:'mint', linalyl_acetate:'linalyl_acetate', calone:'marine', florol:'floral', white_musk:'galaxolide', ambrofix:'ambroxan', ambrox:'ambroxan', iso_e:'iso_e_super', ethyl_maltol:'ethyl_maltol' };
+            const k = String(key || '').toLowerCase().replace(/[\s-]+/g,'_');
+            return aliases[k] || k;
+        }
+        function markerLabel(key) {
+            const labels = { ambroxan:'Ambroxan / Ambrofix', iso_e_super:'Iso E Super', bergamot:'бергамот', limonene:'цитрусы / лимонен', citrus:'цитрусовый аккорд', pink_pepper:'розовый перец', hedione:'Hedione', galaxolide:'чистый мускус', patchouli:'пачули', vanillin:'ваниль', ethyl_maltol:'карамельный этилмальтол', linalool:'линалол', mint:'мята', marine:'морской аккорд', floral:'цветочный аккорд', lavender:'лаванда', cedrol:'кедровый аккорд', coumarin:'кумарин / тонка', evernyl:'мшистый аккорд', rose:'роза', santalol:'сандал', dihydromyrcenol:'свежий ароматический аккорд' };
+            return labels[key] || key.replace(/_/g,' ');
+        }
+        function renderLocalDNA(matches) {
+            const container = document.getElementById('top5-matches-container');
+            if (!container) return;
+            container.innerHTML = '';
+            if (!matches.length) {
+                container.innerHTML = `<p class="text-xs text-stone-500 italic text-center py-4">${currentLang==='ru'?'В локальной базе нет достаточно близкого совпадения. Подключите Gemini для расширенного поиска по мировым ароматам.':'No sufficiently close match in the local reference set. Connect Gemini for a broader search.'}</p>`;
+                return;
+            }
+            const notice = document.createElement('p');
+            notice.className = 'text-[9px] text-amber-700 italic mb-2';
+            notice.textContent = currentLang==='ru' ? 'Предварительные локальные оценки по ограниченной базе — не веб-поиск и не лабораторное подтверждение. После анализа Gemini результаты будут заменены.' : 'Preliminary local estimates from a limited database—not web search or laboratory confirmation. Gemini results will replace these.';
+            container.appendChild(notice);
+            matches.forEach((item,index)=>{
+                const card=document.createElement('div'); card.className='bg-white/60 p-3 rounded-lg border border-gold-500/20';
+                const head=document.createElement('div'); head.className='flex justify-between gap-3';
+                const title=document.createElement('div'); title.className='font-cinzel text-sm text-stone-800 font-bold'; title.textContent=`#${index+1} ${item.brand} — ${item.title}`;
+                const score=document.createElement('strong'); score.className='text-amber-700 text-sm'; score.textContent=`${item.similarity_score}%*`;
+                head.append(title,score);
+                const family=document.createElement('p'); family.className='text-[10px] text-stone-500 mt-1'; family.textContent=item.family;
+                const shared=document.createElement('p'); shared.className='text-[10px] text-stone-600 mt-2'; shared.textContent=(currentLang==='ru'?'Пересечение маркеров: ':'Marker overlap: ')+item.shared_dna;
+                const diff=document.createElement('p'); diff.className='text-[10px] text-stone-600 mt-1'; diff.textContent=item.differences;
+                card.append(head,family,shared,diff); container.appendChild(card);
             });
         }
 
+        function geminiText(key) {
+            const ru = currentLang === 'ru';
+            const labels = {
+                title: ru ? 'Подключение ИИ (Gemini API)' : 'AI connection (Gemini API)',
+                intro: ru ? 'Введите API-ключ Google AI Studio. Калькулятор проверит доступные модели и выберет подходящую.' : 'Enter your Google AI Studio API key. The calculator will check available models and select a suitable one.',
+                keylabel: ru ? 'API-ключ Google Gemini' : 'Google Gemini API key',
+                show: ru ? 'Показать' : 'Show', hide: ru ? 'Скрыть' : 'Hide',
+                modellabel: ru ? 'Модель' : 'Model',
+                remember: ru ? 'Сохранить ключ на этом устройстве' : 'Remember key on this device',
+                connect: ru ? 'Проверить подключение' : 'Check connection',
+                analyze: ru ? 'ИИ-анализ формулы' : 'AI formula analysis',
+                disclaimer: ru ? 'Подписка Gemini в приложении не включает API автоматически. Нужен отдельный ключ Google AI Studio. Ключ отправляется напрямую в Google; хранение на устройстве — по желанию.' : 'A Gemini app subscription does not automatically include API access. A separate Google AI Studio API key is required. The key is sent directly to Google; local storage is optional.',
+                outputs: ru ? 'Результаты полного анализа будут выведены в разделы «Советы ИИ-Парфюмера» и «ТОП-5 ДНК».' : 'The full analysis will populate “AI Perfumer Advice” and “TOP-5 DNA Matches”.',
+                auto: ru ? 'Автоматически — лучшая доступная' : 'Automatic — best available'
+            };
+            return labels[key] || key;
+        }
+
+        function localizeGeminiPanel() {
+            document.querySelectorAll('[data-gemini]').forEach(el => {
+                const key = el.getAttribute('data-gemini');
+                if (key === 'show' || key === 'hide') {
+                    const input = document.getElementById('gemini-api-key');
+                    el.textContent = input && input.type === 'text' ? geminiText('hide') : geminiText('show');
+                } else el.textContent = geminiText(key);
+            });
+            const select = document.getElementById('gemini-model');
+            if (select && select.options.length) select.options[0].textContent = geminiText('auto');
+        }
+
+        function getGeminiKey() {
+            const input = document.getElementById('gemini-api-key');
+            let saved = '';
+            try { saved = sessionStorage.getItem('thePerfumerGeminiKey') || ''; } catch (storageError) {}
+            return ((input && input.value) || saved || '').trim();
+        }
+
+        function setGeminiStatus(message, good = false) {
+            const el = document.getElementById('gemini-connection-status');
+            if (!el) return;
+            el.textContent = message;
+            el.className = 'text-[10px] px-2 py-1 rounded border ' + (good ? 'text-emerald-700 border-emerald-500/40' : 'text-stone-500 border-gold-500/30');
+        }
+
+        function geminiModelId(model) {
+            return String(model.name || '').replace(/^models\//, '');
+        }
+
+        function isGeminiTextModel(model) {
+            const id = geminiModelId(model).toLowerCase();
+            if (!id.startsWith('gemini-')) return false;
+            if (/(image|tts|live|transcribe|embedding|robotics|audio)/.test(id)) return false;
+            // Keep text-capable Flash/Pro models exposed by this API key.
+            return /(flash|pro|argon)/.test(id);
+        }
+
+        async function fetchGeminiModels(key) {
+            // A catalogue request validates that the key is recognized without consuming
+            // a model-generation request or triggering quota on every connection check.
+            const response = await fetch(`${GEMINI_API_ROOT}/models?pageSize=1000`, {
+                method: 'GET',
+                headers: { 'x-goog-api-key': key }
+            });
+            const payload = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                const message = payload.error?.message || `Google API error ${response.status}`;
+                throw new Error(message);
+            }
+            const listed = (payload.models || []).filter(isGeminiTextModel);
+            const priority = ['gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-4-argon', 'gemini-flash-latest', 'gemini-flash-lite-latest'];
+            return listed.sort((a, b) => {
+                const ai = priority.indexOf(geminiModelId(a));
+                const bi = priority.indexOf(geminiModelId(b));
+                return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
+            });
+        }
+
+        function chooseGeminiModel(models) {
+            const select = document.getElementById('gemini-model');
+            const manual = select ? String(select.value || '') : 'auto';
+            if (manual && manual !== 'auto' && models.some(m => geminiModelId(m) === manual.replace(/^models\//, ''))) {
+                return manual.replace(/^models\//, '');
+            }
+            const priority = ['gemini-3.8-flash', 'gemini-3.6-flash', 'gemini-4-argon', 'gemini-flash-latest', 'gemini-flash-lite-latest'];
+            for (const id of priority) if (models.some(m => geminiModelId(m) === id)) return id;
+            return models.length ? geminiModelId(models[0]) : '';
+        }
+
+        async function connectGemini() {
+            const key = getGeminiKey();
+            if (!key) { showToast(currentLang === 'ru' ? 'Введите API-ключ Gemini' : 'Enter a Gemini API key'); return; }
+            const btn = document.getElementById('gemini-connect-btn');
+            btn.disabled = true;
+            setGeminiStatus(currentLang === 'ru' ? 'Проверка API-ключа…' : 'Checking API key…');
+            try {
+                // Do not send a paid/test generation during connection. The earlier working
+                // versions only checked the model catalogue; this avoids an extra quota-consuming call.
+                geminiAvailableModels = await fetchGeminiModels(key);
+                if (!geminiAvailableModels.length) {
+                    throw new Error(currentLang === 'ru'
+                        ? 'Ключ распознан, но Google не вернул доступных текстовых моделей Gemini для этого проекта.'
+                        : 'The key was recognized, but Google returned no available Gemini text models for this project.');
+                }
+                const select = document.getElementById('gemini-model');
+                const previous = select.value || 'auto';
+                select.innerHTML = `<option value="auto">${geminiText('auto')}</option>` + geminiAvailableModels.map(m => {
+                    const id = geminiModelId(m);
+                    return `<option value="${id}">${m.displayName || id}</option>`;
+                }).join('');
+                select.value = geminiAvailableModels.some(m => geminiModelId(m) === previous) ? previous : 'auto';
+                try { sessionStorage.setItem('thePerfumerGeminiKey', key); } catch (storageError) {}
+                try {
+                    if (document.getElementById('gemini-remember-key').checked) localStorage.setItem('thePerfumerGeminiKey', key);
+                } catch (storageError) {}
+                geminiConnected = true;
+                const best = chooseGeminiModel(geminiAvailableModels);
+                setGeminiStatus((currentLang === 'ru' ? 'Ключ принят · доступно моделей: ' : 'Key accepted · available models: ') + geminiAvailableModels.length + ' · ' + best, true);
+                document.getElementById('gemini-analyze-btn').disabled = false;
+                showGeminiResult(currentLang === 'ru'
+                    ? 'Ключ принят, каталог моделей доступен. Генерация будет проверена при первом анализе формулы; проверка подключения не расходует запрос на генерацию.'
+                    : 'Key accepted and model catalogue is available. Generation will be verified on the first formula analysis; connection check does not consume a generation request.');
+                showToast(currentLang === 'ru' ? 'Gemini API подключен' : 'Gemini API connected');
+            } catch (err) {
+                geminiConnected = false;
+                geminiAvailableModels = [];
+                document.getElementById('gemini-analyze-btn').disabled = true;
+                setGeminiStatus(currentLang === 'ru' ? 'Ошибка подключения' : 'Connection failed');
+                const msg = err.message || String(err);
+                showGeminiResult((currentLang === 'ru' ? 'Не удалось проверить Gemini API: ' : 'Could not verify Gemini API: ') + msg +
+                    (currentLang === 'ru' ? '\nПроверьте проект, ограничения ключа и статус Gemini API. Если ошибка 429 — это квота проекта, а не ошибка самого ключа.' : '\nCheck the project, API-key restrictions and Gemini API status. A 429 error indicates project quota, not a malformed key.'));
+            } finally { btn.disabled = false; }
+        }
+
+        function collectFormulaForAI() {
+            const rows = [...document.querySelectorAll('#ingredients-container > div')];
+            return rows.map((row, index) => {
+                const weight = Number(row.querySelector('.ingredient-weight')?.value || 0);
+                const concentration = Number(row.querySelector('.ingredient-conc')?.value || 100);
+                return {
+                    ingredient: row.querySelector('.ingredient-name')?.value.trim() || `Ingredient ${index+1}`,
+                    weight_g: weight,
+                    material_concentration_percent: concentration,
+                    pyramid_position: row.querySelector('.ingredient-note')?.value || 'Heart',
+                    pure_active_weight_g: weight * concentration / 100
+                };
+            }).filter(x => x.weight_g > 0);
+        }
+
+        function showGeminiResult(message) {
+            const box = document.getElementById('gemini-ai-result');
+            box.textContent = message;
+            box.classList.remove('hidden');
+        }
+
+        function extractInteractionText(data) {
+            if (typeof data.output_text === 'string' && data.output_text.trim()) return data.output_text.trim();
+            const chunks = [];
+            (data.steps || []).forEach(step => {
+                if (step.type === 'model_output' && Array.isArray(step.content)) {
+                    step.content.forEach(part => { if (part.type === 'text' && part.text) chunks.push(part.text); });
+                }
+            });
+            return chunks.join('\n').trim();
+        }
+
+        function extractGroundedSources(data) {
+            const found = new Map();
+            (data.steps || []).forEach(step => {
+                if (step.type !== 'model_output' || !Array.isArray(step.content)) return;
+                step.content.forEach(part => {
+                    (part.annotations || []).forEach(annotation => {
+                        if (annotation.type === 'url_citation' && annotation.url && /^https?:\/\//i.test(annotation.url)) {
+                            found.set(annotation.url, { url: annotation.url, title: annotation.title || annotation.url });
+                        }
+                    });
+                });
+            });
+            return Array.from(found.values());
+        }
+
+        function buildGeminiAnalysisContext() {
+            const formula = collectFormulaForAI();
+            const total = formula.reduce((sum, row) => sum + row.pure_active_weight_g, 0);
+            const pyramid = { Top: 0, Heart: 0, Base: 0 };
+            formula.forEach(row => {
+                const key = /top/i.test(row.pyramid_position) ? 'Top' : /base/i.test(row.pyramid_position) ? 'Base' : 'Heart';
+                pyramid[key] += row.pure_active_weight_g;
+            });
+            Object.keys(pyramid).forEach(k => pyramid[k] = total ? +(pyramid[k] / total * 100).toFixed(2) : 0);
+            const markerWeights = {};
+            formula.forEach(row => inferMarkersFromName(row.ingredient).forEach(key => {
+                markerWeights[key] = (markerWeights[key] || 0) + row.pure_active_weight_g;
+            }));
+            const markerVector = {};
+            Object.keys(markerWeights).forEach(k => markerVector[k] = total ? +(markerWeights[k] / total * 100).toFixed(2) : 0);
+            const references = FAMOUS_FRAGRANCES_DATABASE.map(p => ({
+                brand: p.brand, title: p.title, family: p.family,
+                skeleton: p.skeleton,
+                reference_notes: p.notes?.[currentLang] || p.notes?.en || []
+            }));
+            return { formula, total_pure_active_weight_g: +total.toFixed(4), pyramid_distribution_percent: pyramid, recognized_molecular_markers_percent: markerVector, reference_fragrance_database: references };
+        }
+
+        function getFormulaFingerprint(context = buildGeminiAnalysisContext()) {
+            // Stable signature of all fields that materially affect DNA matching.
+            return JSON.stringify({
+                formula: context.formula.map(x => [x.ingredient.toLowerCase(), +x.weight_g.toFixed(5), +x.material_concentration_percent.toFixed(3), x.pyramid_position]),
+                markers: context.recognized_molecular_markers_percent,
+                language: currentLang
+            });
+        }
+
+        function scheduleGeminiAutoAnalysis() {
+            // IMPORTANT: editing the formula must never trigger a paid/quota-consuming web request.
+            // Local olfactory/DNA estimates update in buildGeminiAnalysisContext(); Gemini runs only
+            // after the user explicitly presses the Analyze button.
+            if (geminiAutoTimer) clearTimeout(geminiAutoTimer);
+            geminiAutoTimer = null;
+            geminiAnalysisRevision++; // invalidate any response for the previous formula
+
+            const context = buildGeminiAnalysisContext();
+            const fingerprint = getFormulaFingerprint(context);
+            const analyzeButton = document.getElementById('gemini-analyze-btn');
+            const dna = document.getElementById('top5-matches-container');
+            const advice = document.getElementById('perfumer-advice-warnings');
+
+            if (!context.formula.length) {
+                if (analyzeButton) analyzeButton.disabled = true;
+                geminiLastAnalyzedFingerprint = '';
+                if (dna) dna.innerHTML = `<div class="text-xs text-stone-500 italic text-center py-4">${I18N[currentLang].top5Empty}</div>`;
+                if (advice) advice.innerHTML = '';
+                return;
+            }
+
+            const hasKey = !!getGeminiKey();
+            if (analyzeButton) analyzeButton.disabled = !hasKey;
+            if (!hasKey) {
+                showGeminiResult(currentLang === 'ru'
+                    ? 'Локальный анализ работает. Чтобы выполнить профессиональный веб-анализ, подключите Gemini API; запрос автоматически не отправляется.'
+                    : 'Local analysis is available. Connect Gemini API for professional web research; no request is sent automatically.');
+                return;
+            }
+
+            if (fingerprint !== geminiLastAnalyzedFingerprint) {
+                showGeminiResult(currentLang === 'ru'
+                    ? 'Формула обновлена. Локальные оценки пересчитаны. Для веб-поиска по профессиональным источникам нажмите «Анализ Gemini» — запрос не будет отправлен автоматически.'
+                    : 'Formula updated. Local estimates have been recalculated. Press “Gemini Analysis” to search professional sources; no request will be sent automatically.');
+            }
+        }
+
+        function parseGeminiJSON(raw) {
+            let textValue = String(raw || '').trim();
+            textValue = textValue.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+            try { return JSON.parse(textValue); } catch (e) {}
+            const first = textValue.indexOf('{');
+            const last = textValue.lastIndexOf('}');
+            if (first >= 0 && last > first) return JSON.parse(textValue.slice(first, last + 1));
+            throw new Error(currentLang === 'ru' ? 'ИИ вернул ответ в неожиданном формате. Повторите анализ.' : 'The AI returned an unexpected format. Please run the analysis again.');
+        }
+
+        function renderGeminiDNA(matches, groundedSources = []) {
+            const container = document.getElementById('top5-matches-container');
+            container.innerHTML = '';
+            // Conservative threshold: weak or speculative resemblance is not displayed.
+            const valid = (Array.isArray(matches) ? matches : [])
+                .filter(item => Number(item.similarity_score) >= 58)
+                .slice(0, 5);
+            if (!valid.length) {
+                const context = buildGeminiAnalysisContext();
+                const markerMasses = {};
+                context.formula.forEach(row => inferMarkersFromName(row.ingredient).forEach(key => {
+                    markerMasses[key] = (markerMasses[key] || 0) + row.pure_active_weight_g;
+                }));
+                const total = context.total_pure_active_weight_g || 0;
+                const local = FAMOUS_FRAGRANCES_DATABASE.map(ref => {
+                    const sk = ref.skeleton || {};
+                    let dot=0, a2=0, b2=0, overlap=0;
+                    const u={}; Object.entries(markerMasses).forEach(([k,v])=>u[normalizeMarkerKey(k)]=(v/(total||1)));
+                    const r={}; Object.entries(sk).forEach(([k,v])=>r[normalizeMarkerKey(k)]=v);
+                    Object.keys(u).forEach(k=>{a2+=u[k]*u[k];dot+=u[k]*(r[k]||0);if(r[k])overlap++;});
+                    Object.values(r).forEach(v=>b2+=v*v);
+                    const score=Math.round(Math.min(84,(a2&&b2?dot/Math.sqrt(a2*b2):0)*75+Math.min(overlap,4)*2));
+                    return {brand:ref.brand,title:ref.title,family:ref.family,score};
+                }).filter(x=>x.score>=18).sort((a,b)=>b.score-a.score).slice(0,5);
+                container.innerHTML='';
+                const message=document.createElement('p'); message.className='text-[10px] text-stone-500 italic text-center py-2';
+                message.textContent=currentLang==='ru' ? (local.length ? 'Gemini не подтвердил убедительные веб-совпадения. Ниже — только локальные предварительные оценки по ограниченной базе.' : 'Gemini не подтвердил убедительных совпадений, и локальная база не нашла близкого скелета.') : (local.length ? 'Gemini did not confirm convincing web matches. Below are preliminary estimates from the limited local database only.' : 'Gemini found no convincing matches, and the local database found no close skeleton.');
+                container.appendChild(message);
+                local.forEach((item,i)=>{ const card=document.createElement('div'); card.className='bg-white/60 p-3 rounded-lg border border-gold-500/20'; const h=document.createElement('div');h.className='flex justify-between gap-3';const name=document.createElement('strong');name.className='text-xs text-stone-800';name.textContent=`#${i+1} ${item.brand} — ${item.title}`;const sc=document.createElement('span');sc.className='text-amber-700 text-xs font-bold';sc.textContent=`${item.score}%*`;h.append(name,sc);const note=document.createElement('p');note.className='text-[9px] text-stone-500 mt-1';note.textContent=currentLang==='ru'?'Эвристика маркеров, не подтверждение запаха.':'Marker heuristic, not sensory confirmation.';card.append(h,note);container.appendChild(card);});
+                return;
+            }
+
+            valid.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white/60 p-3 rounded-lg border border-gold-500/20 hover:border-gold-400/50 transition';
+                const score = Math.max(0, Math.min(100, Number(item.similarity_score) || 0));
+                const heading = document.createElement('div');
+                heading.className = 'flex justify-between items-start gap-3 mb-1';
+                const left = document.createElement('div');
+                const brand = document.createElement('div');
+                brand.className = 'text-[10px] text-gold-700 uppercase tracking-widest font-bold';
+                brand.textContent = `#${index + 1} ${item.brand || 'Reference'} · ${item.family || (currentLang === 'ru' ? 'Парфюмерное направление' : 'Fragrance family')}`;
+                const title = document.createElement('h4');
+                title.className = 'font-cinzel text-sm text-stone-800 font-bold';
+                title.textContent = item.title || (currentLang === 'ru' ? 'Неизвестный аромат' : 'Unnamed fragrance');
+                left.append(brand, title);
+                const scoreEl = document.createElement('span');
+                scoreEl.className = 'font-cinzel font-bold text-sm text-amber-700 whitespace-nowrap';
+                scoreEl.textContent = `${score}%`;
+                heading.append(left, scoreEl);
+                const bar = document.createElement('div');
+                bar.className = 'w-full bg-[#EBDDC8] rounded-full h-1.5 border border-gold-500/25 mb-2 overflow-hidden';
+                const fill = document.createElement('div');
+                fill.className = 'bg-gradient-to-r from-amber-500 to-yellow-500 h-full';
+                fill.style.width = `${score}%`;
+                bar.appendChild(fill);
+                const makeLine = (label, value) => {
+                    const line = document.createElement('p');
+                    line.className = 'mt-1 text-[10px] text-stone-600';
+                    const strong = document.createElement('strong');
+                    strong.textContent = label + ' ';
+                    line.append(strong, document.createTextNode(value || (currentLang === 'ru' ? 'не указано' : 'not specified')));
+                    return line;
+                };
+                card.append(heading, bar,
+                    makeLine(currentLang === 'ru' ? 'Общее ДНК:' : 'Shared DNA:', item.shared_dna),
+                    makeLine(currentLang === 'ru' ? 'Отличия / недостающие элементы:' : 'Differences / missing elements:', item.differences),
+                    makeLine(currentLang === 'ru' ? 'Почему похоже:' : 'Why it matches:', item.rationale),
+                    makeLine(currentLang === 'ru' ? 'Уверенность оценки:' : 'Assessment confidence:', item.confidence));
+                container.appendChild(card);
+            });
+
+            if (groundedSources.length) {
+                const sourceBox = document.createElement('div');
+                sourceBox.className = 'pt-2 border-t border-gold-500/20';
+                const label = document.createElement('p');
+                label.className = 'text-[9px] text-stone-500 font-semibold mb-1';
+                label.textContent = currentLang === 'ru' ? 'Источники веб-поиска:' : 'Web-search sources:';
+                sourceBox.appendChild(label);
+                groundedSources.slice(0, 8).forEach(source => {
+                    if (!source.url || !/^https?:\/\//i.test(source.url)) return;
+                    const link = document.createElement('a');
+                    link.href = source.url;
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    link.className = 'block text-[9px] text-amber-800 underline break-all mt-1';
+                    link.textContent = source.title || source.url;
+                    sourceBox.appendChild(link);
+                });
+                if (sourceBox.children.length > 1) container.appendChild(sourceBox);
+            }
+            const note = document.createElement('p');
+            note.className = 'text-[9px] text-stone-500 italic pt-1';
+            note.textContent = currentLang === 'ru'
+                ? 'Сходство — экспертная оценка по доступным описаниям и ольфакторной архитектуре, а не лабораторное подтверждение формулы.'
+                : 'Similarity is an expert estimate from available descriptions and olfactive architecture, not laboratory confirmation of a formula.';
+            container.appendChild(note);
+        }
+
+        // Always-on ingredient-by-ingredient fallback. Uses active-material share, not gross solution mass.
+        // Its ranges are cautious starting points, never universal standards or safety limits.
+        function renderLocalIngredientAdvice() {
+            const container = document.getElementById('perfumer-advice-warnings');
+            if (!container) return;
+            const rows = Array.from(document.querySelectorAll('#ingredients-container > div')).map(row => {
+                const name = row.querySelector('.ingredient-name')?.value?.trim() || '';
+                const gross = parseFloat(row.querySelector('.ingredient-weight')?.value) || 0;
+                const dilution = Math.max(0, Math.min(100, parseFloat(row.querySelector('.ingredient-conc')?.value) || 100));
+                const pure = gross * dilution / 100;
+                const keys = inferMarkersFromName(name);
+                const meta = keys.map(k => INGREDIENT_GUIDANCE[k]).find(Boolean);
+                return {name, gross, dilution, pure, share: 0, keys, meta};
+            }).filter(x => x.name && x.gross > 0);
+            const totalPure = rows.reduce((sum, x) => sum + x.pure, 0);
+            rows.forEach(x => x.share = totalPure ? x.pure / totalPure * 100 : 0);
+            container.innerHTML = '';
+            if (!rows.length || totalPure <= 0) {
+                addAIAdviceItem('info', currentLang === 'ru' ? 'Добавьте ингредиенты' : 'Add ingredients',
+                    currentLang === 'ru' ? 'Введите название, массу и концентрацию раствора каждого материала.' : 'Enter each material name, solution mass and dilution.');
+                return;
+            }
+            const ru = currentLang === 'ru';
+            const addCard = (type, title, description) => {
+                const div = document.createElement('div');
+                const color = type === 'warning' ? 'bg-rose-50/90 border-rose-400/60 text-rose-900' :
+                    type === 'success' ? 'bg-emerald-50/90 border-emerald-500/50 text-emerald-900' :
+                    'bg-amber-50/90 border-amber-400/60 text-amber-900';
+                div.className = `p-2.5 rounded-lg border ${color} text-xs flex items-start space-x-2.5`;
+                const icon = document.createElement('i');
+                icon.className = `fa-solid ${type === 'warning' ? 'fa-triangle-exclamation' : type === 'success' ? 'fa-circle-check' : 'fa-robot'} mt-0.5`;
+                const body = document.createElement('div');
+                const heading = document.createElement('strong');
+                heading.className = 'block text-[11px] uppercase tracking-wide font-semibold text-stone-800';
+                heading.textContent = title;
+                const text = document.createElement('div');
+                text.className = 'text-[11px] opacity-90 text-stone-700 whitespace-pre-line';
+                text.textContent = description;
+                body.append(heading, text);
+                div.append(icon, body);
+                container.appendChild(div);
+            };
+
+            addCard('info', ru ? 'Предварительный анализ состава' : 'Preliminary formula analysis',
+                ru ? `Доля считается от суммы чистых ароматических веществ: ${totalPure.toFixed(4)} г. Масса раствора и процент разведения учтены отдельно. Это локальная оценка по справочным ориентирам, не замена веб-поиску, блоттеру или оценке парфюмера.` :
+                `Shares are calculated from total active aromatic material: ${totalPure.toFixed(4)} g. Solution mass and dilution are accounted for separately. This is a local guide, not a substitute for web research, blotter testing or a perfumer's evaluation.`);
+
+            rows.forEach(item => {
+                const share = item.share;
+                const active = item.pure;
+                const dilutionNote = item.dilution < 100
+                    ? (ru ? `Раствор: ${item.dilution}% · активное вещество: ${active.toFixed(4)} г.` : `Solution: ${item.dilution}% · active material: ${active.toFixed(4)} g.`)
+                    : (ru ? `Чистое вещество: ${active.toFixed(4)} г.` : `Active material: ${active.toFixed(4)} g.`);
+                if (!item.meta) {
+                    addCard('info', `${item.name} — ${share.toFixed(2)}%`,
+                        (ru ? `${dilutionNote}\nТочный материал не сопоставлен с локальным справочным профилем. Нельзя обоснованно сказать «убавить» или «добавить» только по проценту: нужны точное название/CAS, спецификация поставщика и цель формулы. При веб-анализе Gemini следует проверить описание запаха, рабочие дозировки и сочетания в профессиональных источниках.` :
+                        `${dilutionNote}\nNo matching local reference profile was found. The percentage alone cannot justify “reduce” or “increase”: exact name/CAS, supplier specification and target formula are needed. Gemini web analysis should verify odor description, working dosages and pairings in professional sources.`));
+                    return;
+                }
+                const [lo, hi] = item.meta.range;
+                let type = 'success', judgement = '';
+                if (share > hi) {
+                    type = 'warning';
+                    judgement = ru
+                        ? `Доля выше встроенного стартового ориентира ${lo}–${hi}% концентрата. Проверьте пробу с уменьшением дозы на 10–25% относительно текущего количества; если материал маскирует другие ноты, уменьшайте ступенчато.`
+                        : `Share is above the built-in starting guide of ${lo}–${hi}% of concentrate. Test a version with 10–25% less than the current dose; if it masks other notes, reduce in steps.`;
+                } else if (share < lo) {
+                    type = 'info';
+                    judgement = ru
+                        ? `Доля ниже встроенного стартового ориентира ${lo}–${hi}% концентрата. Это не доказывает, что материала мало: если нота должна быть заметной, сравните контрольную пробу с увеличением на 10–20%; если это модификатор, низкая доля может быть правильной.`
+                        : `Share is below the built-in starting guide of ${lo}–${hi}% of concentrate. This does not prove it is too low: if the note should be perceptible, compare a control with a 10–20% increase; a modifier may correctly be used at a low level.`;
+                } else {
+                    judgement = ru
+                        ? `Доля внутри встроенного стартового ориентира ${lo}–${hi}% концентрата. Это не подтверждает баланс на запах; проверьте, поддерживает ли материал целевой аккорд и не закрывает ли соседние ноты.`
+                        : `Share is within the built-in starting guide of ${lo}–${hi}% of concentrate. This does not confirm olfactive balance; check whether it supports the target accord without masking neighboring notes.`;
+                }
+                const profile = item.meta[ru ? 'ru' : 'en'] || item.meta.en || '';
+                addCard(type, `${item.name} — ${share.toFixed(2)}% ${ru ? 'чистого концентрата' : 'active concentrate'}`,
+                    `${dilutionNote}\n${judgement}\n${ru ? 'Справочный профиль:' : 'Reference profile:'} ${profile}\n${ru ? 'Диапазон — экспериментальный ориентир, не универсальная норма и не лимит безопасности.' : 'Range is an experimental guide, not a universal norm or safety limit.'}`);
+            });
+
+            // Formula-level balance flags based on actual active shares and recognized high-impact materials.
+            const dominant = rows.filter(x => x.pure > 0 && x.share >= 25);
+            dominant.forEach(x => addCard('warning',
+                ru ? `Проверить доминирование: ${x.name} (${x.share.toFixed(1)}%)` : `Check dominance: ${x.name} (${x.share.toFixed(1)}%)`,
+                ru ? 'Материал занимает не менее четверти активного концентрата. Это может быть намеренно, но сравните блоттер с вариантом, где его количество снижено на 10–20%, чтобы проверить, возвращаются ли скрытые ноты.' :
+                'This material makes up at least a quarter of the active concentrate. That may be intentional, but compare a blotter with 10–20% less to see whether masked notes re-emerge.'));
+
+            const names = rows.map(x => x.name.toLowerCase()).join(' | ');
+            const pairNotes = [];
+            if (/(ethyl.?maltol|мальтол)/i.test(names) && /(lemon|bergamot|citrus|лимон|бергамот|цитрус)/i.test(names))
+                pairNotes.push(ru ? 'Этилмальтол + цитрусы: сладость может сгладить цедровую резкость, но избыток способен приглушить ощущение свежести. Сравните пробу без сладкого компонента и с его уменьшением.' : 'Ethyl maltol + citrus: sweetness can round citrus sharpness, but excess may mute freshness. Compare a control without the sweetener and a reduced-dose trial.');
+            if (/(calone|marine|aquatic|калон|морск)/i.test(names) && /(hedione|linalool|linalyl acetate|florol|жасмин|цветоч)/i.test(names))
+                pairNotes.push(ru ? 'Морской материал + цветочное сердце: проверьте, не становится ли аккорд слишком озоновым/металлическим; протестируйте Calone в 2–3 ступенях разведения.' : 'Marine material + floral heart: check whether the accord turns too ozonic/metallic; test Calone at 2–3 dosage steps.');
+            if (/(ambrox|ambrofix|амброкс)/i.test(names) && /(iso\s*e|iso.?e.?super|изо.?е)/i.test(names))
+                pairNotes.push(ru ? 'Амброксан + Iso E Super: оба могут усиливать сухую древесно-амбровую основу; если свежие/цветочные ноты теряются, сравните варианты с уменьшением одного из них, а не обоих сразу.' : 'Ambroxan + Iso E Super: both can reinforce a dry woody-amber base; if fresh/floral notes disappear, compare versions reducing one material at a time.');
+            if (/(patchouli|пачули)/i.test(names) && /(lemon|bergamot|citrus|лимон|бергамот|цитрус)/i.test(names))
+                pairNotes.push(ru ? 'Пачули + цитрусы: земляная база может дать контраст, но при избытке делает верх мутным. Проверьте открытие через 5–15 минут и вариант с меньшей дозой пачули.' : 'Patchouli + citrus: earthy base can create contrast, but excess may muddy the opening. Check the opening after 5–15 minutes and a reduced-patchouli trial.');
+            pairNotes.forEach((txt, i) => addCard('info', ru ? `Сочетание материалов ${i+1}` : `Material interaction ${i+1}`, txt));
+
+            const sourceNote = document.createElement('p');
+            sourceNote.className = 'text-[10px] text-stone-500 italic py-2';
+            sourceNote.textContent = ru
+                ? 'Локальная версия использует ориентировочные профили. Для профессиональной проверки подключите Gemini: анализ должен искать данные по каждому материалу и сочетаниям в The Good Scents Company, документации поставщиков (например, Perfumer’s Apprentice / Pell Wall) и использовать IFRA только для вопросов ограничений безопасности.'
+                : 'The local version uses approximate profiles. For professional verification, connect Gemini: it should research each material and pairings in The Good Scents Company, supplier documentation (e.g. Perfumer’s Apprentice / Pell Wall), and use IFRA for safety restrictions only.';
+            container.appendChild(sourceNote);
+        }
+
+        function renderGeminiAdvice(advice, skeleton, groundedSources = []) {
+            const container = document.getElementById('perfumer-advice-warnings');
+            if (!container) return;
+            const entries = Array.isArray(advice) ? advice.filter(Boolean) : (advice && typeof advice === 'object' ? Object.values(advice).filter(x => x && typeof x === 'object') : []);
+            if (!entries.length) {
+                renderLocalIngredientAdvice();
+                const notice = document.createElement('p');
+                notice.className = 'text-[10px] text-amber-800 italic py-2';
+                notice.textContent = currentLang === 'ru'
+                    ? 'Gemini не вернул рекомендации по ингредиентам; показана локальная предварительная оценка. Повторите веб-анализ.'
+                    : 'Gemini returned no ingredient advice; local preliminary guidance is shown. Retry web analysis.';
+                container.prepend(notice);
+            } else {
+                container.innerHTML = '';
+                entries.slice(0, 30).forEach(item => {
+                    const type = ['warning', 'success', 'info'].includes(item.type) ? item.type : 'info';
+                    const div = document.createElement('div');
+                    const color = type === 'warning' ? 'bg-rose-50/90 border-rose-400/60 text-rose-900' : type === 'success' ? 'bg-emerald-50/90 border-emerald-500/50 text-emerald-900' : 'bg-amber-50/90 border-amber-400/60 text-amber-900';
+                    div.className = `p-2.5 rounded-lg border ${color} text-xs flex items-start space-x-2.5`;
+                    const icon = document.createElement('i');
+                    icon.className = `fa-solid ${type === 'warning' ? 'fa-triangle-exclamation' : type === 'success' ? 'fa-circle-check' : 'fa-robot'} mt-0.5 text-amber-700`;
+                    const body = document.createElement('div');
+                    const title = document.createElement('strong');
+                    title.className = 'block text-[11px] uppercase tracking-wide font-semibold text-stone-800';
+                    title.textContent = item.title || item.ingredient || (currentLang === 'ru' ? 'Рекомендация' : 'Recommendation');
+                    const desc = document.createElement('span');
+                    desc.className = 'text-[11px] opacity-90 text-stone-700 whitespace-pre-line';
+                    desc.textContent = item.description || item.desc || item.advice || item.text || '';
+                    body.append(title, desc);
+
+                    const sourceItems = Array.isArray(item.sources) ? item.sources : [];
+                    sourceItems.slice(0, 4).forEach(source => {
+                        const url = typeof source === 'string' ? source : source?.url;
+                        const label = typeof source === 'string' ? source : (source?.title || source?.name || url);
+                        if (!url || !/^https?:\/\//i.test(url)) return;
+                        const a = document.createElement('a');
+                        a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+                        a.className = 'block text-[10px] underline text-amber-800 mt-1 break-all';
+                        a.textContent = (currentLang === 'ru' ? 'Источник: ' : 'Source: ') + label;
+                        body.appendChild(a);
+                    });
+                    div.append(icon, body);
+                    container.appendChild(div);
+                });
+            }
+
+            // Guarantee visible coverage for every ingredient even if the model accidentally omits a row.
+            if (entries.length) {
+                const formulaRows = collectFormulaForAI();
+                formulaRows.forEach(row => {
+                    const key = String(row.ingredient || '').toLowerCase().trim();
+                    if (!key) return;
+                    const covered = entries.some(item => JSON.stringify(item).toLowerCase().includes(key));
+                    if (covered) return;
+                    const totalActive = formulaRows.reduce((sum, x) => sum + (Number(x.pure_active_weight_g) || 0), 0);
+                    const share = totalActive ? (Number(row.pure_active_weight_g) || 0) / totalActive * 100 : 0;
+                    const card = document.createElement('div');
+                    card.className = 'p-2.5 rounded-lg border bg-amber-50/90 border-amber-400/60 text-xs flex items-start space-x-2.5';
+                    const icon = document.createElement('i');
+                    icon.className = 'fa-solid fa-circle-info mt-0.5 text-amber-700';
+                    const body = document.createElement('div');
+                    const heading = document.createElement('strong');
+                    heading.className = 'block text-[11px] uppercase tracking-wide font-semibold text-stone-800';
+                    heading.textContent = (currentLang === 'ru' ? 'Нет отдельного ответа по ингредиенту: ' : 'No dedicated advice returned for: ') + row.ingredient + ` — ${share.toFixed(2)}%`;
+                    const desc = document.createElement('span');
+                    desc.className = 'text-[11px] opacity-90 text-stone-700';
+                    desc.textContent = currentLang === 'ru'
+                        ? `В формуле: ${row.weight_g} г раствора, разведение ${row.material_concentration_percent}%, активная масса ${row.pure_active_weight_g} г. Не буду придумывать рекомендацию без проверенного профиля. Повторите анализ; проверьте точное название/CAS в профессиональном источнике.`
+                        : `In formula: ${row.weight_g} g solution, ${row.material_concentration_percent}% dilution, ${row.pure_active_weight_g} g active material. I will not invent advice without a verified profile. Retry analysis and verify the exact name/CAS in a professional source.`;
+                    body.append(heading, desc);
+                    card.append(icon, body);
+                    container.appendChild(card);
+                });
+            }
+
+            // Show actual web-grounded citations returned by Google's search tool.
+            const unique = new Map();
+            (Array.isArray(groundedSources) ? groundedSources : []).forEach(source => {
+                if (source?.url && /^https?:\/\//i.test(source.url)) unique.set(source.url, source);
+            });
+            if (unique.size) {
+                const box = document.createElement('div');
+                box.className = 'mt-2 p-2 rounded-lg border border-gold-500/25 bg-white/60';
+                const title = document.createElement('strong');
+                title.className = 'block text-[10px] uppercase tracking-wide text-stone-700 mb-1';
+                title.textContent = currentLang === 'ru' ? 'Профессиональные веб-источники, использованные в анализе' : 'Professional web sources used in the analysis';
+                box.appendChild(title);
+                Array.from(unique.values()).slice(0, 12).forEach(source => {
+                    const a = document.createElement('a');
+                    a.href = source.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+                    a.className = 'block text-[10px] underline text-amber-800 py-0.5 break-all';
+                    a.textContent = source.title || source.url;
+                    box.appendChild(a);
+                });
+                container.appendChild(box);
+            }
+            const tips = document.getElementById('ui-ai-tips-list');
+            if (tips) {
+                tips.innerHTML = '';
+                const lines = [];
+                if (skeleton && Array.isArray(skeleton.strengths)) lines.push(...skeleton.strengths.map(x => (currentLang === 'ru' ? 'Сильные стороны скелета: ' : 'Skeleton strengths: ') + x));
+                if (skeleton && Array.isArray(skeleton.weaknesses)) lines.push(...skeleton.weaknesses.map(x => (currentLang === 'ru' ? 'Слабые места скелета: ' : 'Skeleton weaknesses: ') + x));
+                if (skeleton && Array.isArray(skeleton.adjustments)) lines.push(...skeleton.adjustments.map(x => (currentLang === 'ru' ? 'Корректировка: ' : 'Adjustment: ') + x));
+                if (!lines.length) lines.push(currentLang === 'ru' ? 'См. рекомендации выше; проверьте изменения на блоттере и коже.' : 'See recommendations above; evaluate changes on blotter and skin.');
+                lines.slice(0, 20).forEach(line => { const li = document.createElement('li'); li.textContent = line; tips.appendChild(li); });
+            }
+        }
+
+        async function runGeminiAnalysis(automatic = false) {
+            const key = getGeminiKey();
+            const context = buildGeminiAnalysisContext();
+            if (!key) { if (!automatic) showToast(currentLang === 'ru' ? 'Сначала введите API-ключ' : 'Enter the API key first'); return; }
+            if (!context.formula.length) { if (!automatic) showToast(currentLang === 'ru' ? 'Добавьте ингредиенты в формулу' : 'Add ingredients to the formula'); return; }
+            const runRevision = ++geminiAnalysisRevision;
+            const runFingerprint = getFormulaFingerprint(context);
+            const button = document.getElementById('gemini-analyze-btn');
+            button.disabled = true;
+            showGeminiResult(currentLang === 'ru' ? 'Gemini анализирует именно текущую версию рецепта и пересчитывает сходства…' : 'Gemini is analyzing this exact formula version and recalculating matches…');
+            const prompt = (currentLang === 'ru'
+                ? `Ты — ведущий парфюмер-разработчик и аналитик формул. Каждый запрос — НОВАЯ независимая формула. Игнорируй любые предыдущие ответы и не сохраняй прежний ТОП-5. Сначала заново ранжируй референсы строго по текущему составу и его количественным пропорциям. Если пользователь изменил ингредиенты или дозировки, результаты обязаны измениться, когда изменился профиль. Не удерживай аромат из прошлого анализа только потому, что он был выбран ранее. Проведи глубокий анализ именно переданной рецептуры с учетом массы каждого раствора, процента активного вещества, фактической чистой массы, позиции в пирамиде и распознанных маркеров. Не делай вид, что это GC-MS: названия ингредиентов могут быть неоднозначными, а эвристические маркеры неполны. Если маркер не распознан, анализируй название и контекст, но помечай неопределенность.\n\nЗАДАЧА 1 — WEB DNA MATCH: обязательно используй встроенный Google Search для поиска реальных мировых ароматов по текущему рецепту. Сначала проанализируй доминирующие аккорды и количественный молекулярный скелет, затем ищи в интернете ароматы с подтверждаемыми описаниями нот/аккордов (официальные страницы брендов, Fragrantica, Basenotes, Parfumo и авторитетные парфюмерные источники). Сопоставляй найденные ароматы с рецептом по нескольким независимым признакам: пропорции и доминирующие материалы, аккорды, семейство, верх/сердце/база, диффузия и общий характер. Локальная reference_fragrance_database — только дополнительная подсказка, НЕ ограничивайся ею и НЕ выбирай аромат только потому, что он в ней есть. Не выбирай аромат по одному ингредиенту или одной ноте. Включай в top5 только реально найденные и обоснованные совпадения. КРИТИЧЕСКОЕ ПРАВИЛО: если нет убедительного сходства, верни пустой массив top5: []. Если сходство слабое или подтверждается только общей нотой/семейством, НЕ выводи этот аромат вообще. Минимальный порог similarity_score для показа — 58/100; не подгоняй оценки под заполнение пяти карточек. Максимум пять, можно 1–4, а можно ни одного. Не выдумывай ароматы, ноты, бренды, ссылки и источники. Не выдумывай скрытую формулу бренда; описывай только сходство ольфакторной ДНК/архитектуры. similarity_score — экспертная оценка, НЕ лабораторная вероятность. Для каждого совпадения укажи короткое доказательство из веб-описаний в rationale. Используй только ароматы, существование и профиль которых удалось проверить поиском.\n\nЗАДАЧА 2 — ПРОФЕССИОНАЛЬНЫЕ СОВЕТЫ ПО КАЖДОМУ ИНГРЕДИЕНТУ И СОЧЕТАНИЯМ. Для КАЖДОЙ строки текущей формулы создай отдельную рекомендацию, не пропускай ни одного ингредиента. Рассчитай долю чистого вещества: масса раствора × процент разведения / 100; затем доля = активная масса / сумма всех активных ароматических масс × 100. Укажи название, долю в чистом концентрате, массу раствора, процент разведения и активную массу. Не путай долю концентрата с долей готового парфюма. Выполни отдельный веб-поиск по каждому ингредиенту в профессиональных источниках: The Good Scents Company, документация производителей/поставщиков (IFF, Givaudan, Firmenich/dsm-firmenich, Symrise, Robertet, Perfumer's Apprentice, Pell Wall), профессиональные учебные источники и патенты при необходимости. Для каждого материала опиши источник-подтверждённый запах/эффект в смеси, интенсивность и летучесть только при наличии подтверждения, рабочие дозировки с контекстом, полезные сочетания и возможные конфликты. Добавь массив sources с точными заголовками и URL реально найденных страниц. Не выдумывай источники, ссылки, дозировки или свойства. Если профессиональный источник не найден, прямо скажи об этом и запроси точное торговое название/CAS.\n\nДля каждого материала выбери практическое действие: «УМЕНЬШИТЬ» — только если есть основание подозревать доминирование/маскирование, предложи пробу с уменьшением текущей дозы на 10–20%; «УВЕЛИЧИТЬ» — только если целевая нота действительно недостроена, предложи тестовый прирост 10–20%; иначе «ОСТАВИТЬ / ПРОВЕРИТЬ». Процент сам по себе не доказывает передозировку или нехватку. Объясни ожидаемый эффект и какие соседние ноты могут проявиться или ослабнуть. Добавь минимум 1–3 отдельных совета по сочетаниям, переходу верх/сердце/база, маскированию и связующим аккордам. Корректировки указывай в процентах чистого концентрата и/или относительно текущей дозы. IFRA используй только для безопасности и ограничений, не для оценки обонятельного баланса; не утверждай соответствие без точного сырья, категории продукта и актуального стандарта.\n\nВерни ТОЛЬКО валидный JSON без Markdown по схеме: {"top5":[{"brand":"...","title":"...","family":"...","similarity_score":0,"shared_dna":"...","differences":"...","rationale":"...","confidence":"высокая/средняя/низкая"}],"advice":[{"type":"warning|info|success","title":"...","description":"...","sources":[{"title":"...","url":"https://..."}]}],"skeleton_analysis":{"strengths":["..."],"weaknesses":["..."],"adjustments":["..."]}}. Массив advice должен содержать отдельный объект для каждого ингредиента плюс 1–3 рекомендации по сочетаниям. Не ограничивайся первыми восемью.\n\nДАННЫЕ ФОРМУЛЫ И РЕФЕРЕНСОВ:\n`
+                : `You are a senior perfumer and fragrance-formula analyst. Every request is a NEW independent formula. Ignore all previous answers and do not preserve the previous TOP-5. Re-rank references from scratch using only the current formula and its quantitative proportions. If ingredients or dosages changed, update the matches whenever the profile changes. Never keep a previous perfume merely because it appeared in the prior analysis. Analyze this exact formula using each ingredient's solution mass, active-material percentage, pure active mass, pyramid position and recognized markers. Do not pretend this is GC-MS: ingredient names can be ambiguous and heuristic marker mapping is incomplete. Analyze unrecognized names contextually but flag uncertainty.\n\nTASK 1 — WEB DNA MATCH: you MUST use the built-in Google Search tool to research real-world fragrances for the current formula. First analyze the dominant accords and quantitative molecular skeleton, then search the web for fragrances with verifiable note/accord descriptions (official brand pages, Fragrantica, Basenotes, Parfumo, and reputable fragrance sources). Compare candidates using several independent dimensions: proportions and dominant materials, accords, family, top/heart/base, diffusion, and overall character. The local reference_fragrance_database is only a supplementary hint; do NOT limit the search to it and do NOT select a perfume merely because it is listed there. Never match on one ingredient or one note alone. Include only real, web-verified and well-supported matches. CRITICAL: if no convincing resemblance exists, return an empty top5 array: []. If resemblance is weak or supported only by a shared note/family, OMIT that perfume entirely. Minimum similarity_score for display is 58/100; do not invent scores just to fill five cards. Return up to five, possibly 1–4, or none. Never invent perfumes, notes, brands, URLs, or sources. Never invent a brand's secret formula; describe only olfactive-DNA/architecture similarities. similarity_score is an expert estimate, NOT a laboratory probability. Include concise web-based evidence in rationale. Use only perfumes whose existence and profile were verified by search.\n\nTASK 2 — PROFESSIONAL INGREDIENT-BY-INGREDIENT ADVICE AND PAIRINGS. Create a separate advice object for EVERY ingredient row; omit none. Calculate active mass as solution mass × material dilution percent / 100, then active share = active mass / total active aromatic mass × 100. Include name, active-concentrate share, solution mass, dilution percent and active mass. Do not confuse concentrate share with finished-perfume share. Research EACH ingredient individually in professional sources: The Good Scents Company; manufacturer/supplier documentation (IFF, Givaudan, Firmenich/dsm-firmenich, Symrise, Robertet, Perfumer's Apprentice, Pell Wall); professional training references/patents when useful. Describe source-supported odor/effect in blends, intensity/volatility only when supported, typical working levels with context, useful pairings and conflicts. Add a sources array with exact titles and URLs actually found. Never invent sources, links, dosages or properties. If no professional source is found, say so and request exact trade name/CAS.\n\nFor each material choose an action: REDUCE only with evidence of dominance/masking and suggest a trial 10–20% reduction from current dose; INCREASE only if the target note is underbuilt and suggest a 10–20% trial increase; otherwise KEEP/TEST. Percentage alone does not prove overdose or shortage. Explain the expected effect and which neighboring notes may emerge or weaken. Add 1–3 separate pairing recommendations for interactions, top/heart/base transitions, masking and bridging accords. State adjustments as percentage of pure concentrate and/or relative change from current dose. Use IFRA only for safety/regulatory restrictions, not olfactive balance; do not claim compliance without exact material, product category and current standard.\n\nReturn ONLY valid JSON without Markdown using this schema: {"top5":[{"brand":"...","title":"...","family":"...","similarity_score":0,"shared_dna":"...","differences":"...","rationale":"...","confidence":"high/medium/low"}],"advice":[{"type":"warning|info|success","title":"...","description":"...","sources":[{"title":"...","url":"https://..."}]}],"skeleton_analysis":{"strengths":["..."],"weaknesses":["..."],"adjustments":["..."]}}. advice must contain one object per ingredient plus 1–3 pairing recommendations. Return all rows, not just the first eight.\n\nFORMULA AND REFERENCE DATA:\n`) + `\n\nCURRENT_FORMULA_FINGERPRINT: ${runFingerprint}\nTreat this fingerprint as a unique current-input version; do not reuse a result from another fingerprint.\n\n` + JSON.stringify(context, null, 2);
+            try {
+                if (!geminiAvailableModels.length) geminiAvailableModels = await fetchGeminiModels(key);
+                const selected = chooseGeminiModel(geminiAvailableModels);
+                const available = geminiAvailableModels.map(geminiModelId);
+                const modelsToTry = [...new Set([selected, ...GEMINI_MODEL_FALLBACKS.filter(id => available.includes(id))].filter(Boolean))];
+                let answer = '', usedModel = '', lastError = '', successfulData = null;
+                const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+                for (const modelName of modelsToTry) {
+                    for (let attempt = 0; attempt < 2; attempt++) {
+                        let response, data = {};
+                        try {
+                            response = await fetch(`${GEMINI_API_ROOT}/interactions`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+                                body: JSON.stringify({ model: modelName, input: prompt, tools: [{ type: 'google_search' }], store: false, generation_config: { max_output_tokens: 10000, thinking_level: 'medium' } })
+                            });
+                            data = await response.json().catch(() => ({}));
+                        } catch (networkError) {
+                            lastError = networkError.message || 'Network error';
+                            if (attempt === 0) { await sleep(900); continue; }
+                            break;
+                        }
+                        if (response.ok) {
+                            answer = extractInteractionText(data);
+                            if (answer) { usedModel = modelName; successfulData = data; break; }
+                            lastError = currentLang === 'ru' ? `Модель ${modelName} вернула пустой ответ.` : `Model ${modelName} returned an empty response.`;
+                            break;
+                        }
+                        lastError = data.error?.message || `Google API error ${response.status}`;
+                        const quotaExceeded = response.status === 429 || /quota|resource[_ ]exhausted|rate.?limit/i.test(lastError);
+                        if (quotaExceeded) {
+                            // Do not retry the same quota error across models: keys and models share
+                            // project-level limits, and retries can worsen RPM/TPM pressure.
+                            const quotaDetails = data.error?.details ? JSON.stringify(data.error.details) : '';
+                            const detailText = [lastError, quotaDetails].filter(Boolean).join(' | ');
+                            const likelyRateLimit = /requests? per minute|tokens? per minute|rpm|tpm|retry.?delay|rate.?limit/i.test(detailText);
+                            const likelyBilling = /billing|payment|credit|spend.?cap|prepay|quota.*exceeded/i.test(detailText);
+                            const friendly = currentLang === 'ru'
+                                ? (likelyRateLimit
+                                    ? 'Google ограничил частоту запросов/объём токенов (429). Подождите перед повтором и проверьте лимиты выбранного проекта, включая Search grounding. Автоматические повторные запросы отключены. '
+                                    : likelyBilling
+                                        ? 'Google вернул 429: вероятно, исчерпана квота, лимит расходов/кредитов или лимит проекта. Новый ключ в том же проекте это не исправит. Проверьте Usage, Rate limits и Billing. '
+                                        : 'Google вернул 429 RESOURCE_EXHAUSTED. Это ограничение квоты/частоты/расходов проекта, а не обязательно неверный API-ключ. Новый ключ в том же проекте обычно не помогает. Проверьте Usage, Rate limits, Search grounding limits и Billing. ')
+                                : (likelyRateLimit
+                                    ? 'Google rate-limited request frequency/token throughput (429). Wait before retrying and check the selected project limits, including Search grounding. Automatic retries are disabled. '
+                                    : likelyBilling
+                                        ? 'Google returned 429: project quota, spend/credit cap, or project limits may be exhausted. A new key in the same project will not fix this. Check Usage, Rate limits and Billing. '
+                                        : 'Google returned 429 RESOURCE_EXHAUSTED. This is a project quota/rate/spend restriction, not necessarily a bad API key. A new key in the same project usually will not help. Check Usage, Rate limits, Search grounding limits and Billing. ');
+                            throw new Error(friendly + 'Details: ' + detailText);
+                        }
+                        const transientServerError = [408,500,502,503,504].includes(response.status) || /high demand|overload|temporarily busy/i.test(lastError);
+                        const unavailable = [404,410].includes(response.status) || /model.*(not found|unavailable|not supported|no longer available)|unsupported.*model/i.test(lastError);
+                        if (transientServerError && attempt === 0) { await sleep(response.status === 503 ? 1800 : 900); continue; }
+                        if (unavailable) break;
+                        throw new Error(lastError);
+                    }
+                    if (answer) break;
+                }
+                if (!answer) throw new Error(lastError || (currentLang === 'ru' ? 'Не удалось получить ответ от доступных моделей.' : 'No available model returned a response.'));
+                // Discard late responses if the user edited the formula while Gemini was working.
+                if (runRevision !== geminiAnalysisRevision || runFingerprint !== getFormulaFingerprint()) return;
+                const result = parseGeminiJSON(answer);
+                renderGeminiDNA(result.top5, extractGroundedSources(successfulData || {}));
+                renderGeminiAdvice(result.advice, result.skeleton_analysis, extractGroundedSources(successfulData || {}));
+                geminiLastAnalyzedFingerprint = runFingerprint;
+                showGeminiResult((currentLang === 'ru' ? 'Анализ актуальной формулы завершён · модель: ' : 'Current-formula analysis complete · model: ') + usedModel + (currentLang === 'ru' ? '\nТОП-5 ДНК и советы рассчитаны заново для текущего состава.' : '\nTOP-5 DNA and advice recalculated for the current composition.'));
+            } catch (err) {
+                if (runRevision === geminiAnalysisRevision) {
+                    renderLocalIngredientAdvice();
+                    const notice = document.createElement('p');
+                    notice.className = 'text-[10px] text-rose-700 italic py-2';
+                    notice.textContent = (currentLang === 'ru'
+                        ? 'Веб-анализ Gemini не завершился; локальные советы и локальные оценки сохранены. Автоматические запросы отключены: повторите вручную только после проверки квоты. Причина: '
+                        : 'Gemini web analysis did not complete; local advice and local estimates are preserved. Automatic requests are disabled: retry manually only after checking quota. Reason: ') + (err.message || 'Unknown error');
+                    const adviceBox = document.getElementById('perfumer-advice-warnings');
+                    if (adviceBox) adviceBox.prepend(notice);
+                    showGeminiResult((currentLang === 'ru' ? 'Ошибка анализа: ' : 'Analysis error: ') + err.message);
+                }
+            } finally {
+                if (runRevision === geminiAnalysisRevision) button.disabled = false;
+            }
+        }
+
+        function initGeminiPanel() {
+            localizeGeminiPanel();
+            let saved = '';
+            try { saved = localStorage.getItem('thePerfumerGeminiKey') || ''; } catch (e) {}
+            if (saved) {
+                document.getElementById('gemini-api-key').value = saved;
+                document.getElementById('gemini-remember-key').checked = true;
+            }
+            document.getElementById('gemini-toggle-key').addEventListener('click', () => {
+                const input = document.getElementById('gemini-api-key');
+                input.type = input.type === 'text' ? 'password' : 'text';
+                localizeGeminiPanel();
+            });
+            document.getElementById('gemini-connect-btn').addEventListener('click', connectGemini);
+            document.getElementById('gemini-analyze-btn').addEventListener('click', () => {
+                if (geminiAutoTimer) clearTimeout(geminiAutoTimer);
+                runGeminiAnalysis(false);
+            });
+            document.getElementById('gemini-remember-key').addEventListener('change', e => {
+                const key = document.getElementById('gemini-api-key').value.trim();
+                try {
+                    if (e.target.checked && key) localStorage.setItem('thePerfumerGeminiKey', key);
+                    else localStorage.removeItem('thePerfumerGeminiKey');
+                } catch (err) {}
+            });
+            document.getElementById('gemini-api-key').addEventListener('input', e => {
+                geminiConnected = false; geminiAvailableModels = [];
+                document.getElementById('gemini-analyze-btn').disabled = true;
+                try {
+                    if (document.getElementById('gemini-remember-key').checked && e.target.value.trim()) localStorage.setItem('thePerfumerGeminiKey', e.target.value.trim());
+                    else localStorage.removeItem('thePerfumerGeminiKey');
+                } catch (err) {}
+                setGeminiStatus(currentLang === 'ru' ? 'Не подключено' : 'Not connected');
+            });
+        }
 
         // Saving files: hosted pages use the viewer's download capability; falls back to a plain link elsewhere
         async function saveFile(filename, data, mime) {
@@ -1636,6 +2379,8 @@
                 toast.classList.add('opacity-0', 'pointer-events-none');
             }, 3000);
         }
+
+        initGeminiPanel();
     </script>
 </body>
 </html>
